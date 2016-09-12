@@ -1,0 +1,31 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "24.0.2"
+
+    defaultConfig {
+        applicationId "com.delelong.diandian"
+        minSdkVersion 11
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile files('libs/AMap3DMap_3.4.0_AMapNavi_1.9.2_AMapSearch_3.4.0_AMapLocation_2.8.0_20160830.jar')
+    compile files('libs/joda-time-2.1.jar')
+    compile files('libs/jpush-android-2.1.9.jar')
+    compile files('libs/fastjson-1.2.2.jar')
+    compile files('libs/guava-19.0.jar')
+}

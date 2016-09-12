@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eaeaea"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/tv_countAndSafety"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_text_custome"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="账号与安全" />
+
+    <Button
+        android:id="@+id/tv_commonAddress"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0.5dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_text_custome"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="常用地址" />
+
+    <Button
+        android:id="@+id/tv_emergencyPerson"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_text_custome"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="紧急联系人" />
+
+    <Button
+        android:id="@+id/tv_userGuide"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_text_custome"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="用户指南" />
+
+    <Button
+        android:id="@+id/tv_versionUpdate"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0.5dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_text_custome"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="版本更新" />
+
+    <Button
+        android:id="@+id/tv_clause"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0.5dp"
+        android:background="@drawable/bg_text_custome"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="法律条款" />
+
+    <Button
+        android:id="@+id/tv_about"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_text_custome"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="关于" />
+
+</LinearLayout>

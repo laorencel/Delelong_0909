@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:gravity="center_vertical"
+    android:layout_height="match_parent">
+    <ImageButton
+        android:id="@+id/head_actionbar"
+        android:layout_width="25dp"
+        android:background="@drawable/img_head_actionbar"
+        android:layout_height="25dp" />
+    <TextView
+        android:id="@+id/city_actionbar"
+        android:layout_width="wrap_content"
+        android:text="合肥"
+        android:textSize="15sp"
+        android:textColor="#868585"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content" />
+    <ImageButton
+        android:id="@+id/msg_actionbar"
+        android:layout_width="25dp"
+        android:background="@drawable/img_msg_actionbar"
+        android:layout_alignParentRight="true"
+        android:layout_height="25dp" />
+</RelativeLayout>

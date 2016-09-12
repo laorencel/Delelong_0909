@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">DianDian</string>
+    <string name="action_settings">settings</string>
+    <string name="normal">普通地图</string>
+    <string name="site">卫星地图</string>
+    <string name="traffic">实时交通（off）</string>
+    <string name="timeOfReach">3分钟</string>
+    <string name="postion">这里上车</string>
+    <string name="register"><![CDATA[< 注册 register]]></string>
+    <string name="agree">最终版权归多乐朗科技所有</string>
+    <string name="forgotPwd">忘记密码？</string>
+    <string name="login">登 录</string>
+    <string name="pwd">请输入密码</string>
+    <string name="phone">请输入手机号</string>
+    <string name="verificationCode">验证码</string>
+    <string name="confirm">提    交</string>
+    <string name="getVerificationCode">获 取</string>
+    <string name="destination">目的地</string>
+    <string name="placeOfDeparture">始发地</string>
+    <string name="goNow">现在</string>
+    <string name="timeToGo">出发时间</string>
+    <string name="rePwd">请确认密码</string>
+    <string name="no_result">对不起，没有搜索到相关数据！</string>
+</resources>

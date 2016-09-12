@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ffffff</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorPinChe">#f17f22</color>
+    <color name="colorActionBarBg">#ffffff</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorGray">#ededed</color>
+    <color name="colorAlpha">#00000000</color>
+    <color name="mainColor">#1BC47A</color>
+</resources>
