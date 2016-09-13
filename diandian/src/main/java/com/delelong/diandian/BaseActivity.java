@@ -617,7 +617,7 @@ public class BaseActivity extends AppCompatActivity {
     public <T> void intentActivityForResult(Context context, Class<T> tClass, String key, String value, String city, int requestCode) {
         Intent intent = new Intent(context, tClass);
         intent.putExtra(key, value);
-        intent.putExtra("com/delelong/diandian/city", city);
+        intent.putExtra("city", city);
         startActivityForResult(intent, requestCode);
     }
 

@@ -1,6 +1,8 @@
 package com.delelong.diandian.menuActivity;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -65,25 +67,34 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.arrow_back:
                 finish();
                 break;
-            case R.id.btn_modifyPwd:
-                finish();
+            case R.id.btn_modifyPwd://修改密码
+                openFrag(forgotFrag);
                 break;
-            case R.id.btn_commonAddress:
-                finish();
+            case R.id.btn_commonAddress://设置常用地址
+                Bundle bundle = getIntent().getBundleExtra("bundle");
+                intentActivityWithBundle(SettingActivity.this,CommonAddressActivity.class,bundle);
                 break;
-            case R.id.btn_remindMode:
-                finish();
+            case R.id.btn_remindMode://提醒模式
+                openFrag(forgotFrag);
                 break;
-            case R.id.btn_clause:
-                finish();
+            case R.id.btn_clause://法律条款
+                openFrag(forgotFrag);
                 break;
-            case R.id.btn_versionUpdate:
-                finish();
+            case R.id.btn_versionUpdate://版本更新
+                openFrag(forgotFrag);
                 break;
-            case R.id.btn_aboutUs:
-                finish();
+            case R.id.btn_aboutUs://关于我们
+                openFrag(forgotFrag);
                 break;
         }
 
+    }
+
+    private void openFrag(Fragment frag) {
+        fragmentManager.beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.frag,frag,frag.getClass().getName())
+                .addToBackStack(null)
+                .commit();
     }
 }

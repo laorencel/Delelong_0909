@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -10,9 +11,10 @@
         android:padding="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/address_home" />
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/icon_home" />
 
         <TextView
             android:id="@+id/tv_home"
@@ -20,7 +22,8 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:text="设置家庭住址"
-            android:textSize="18sp" />
+            android:maxLines="1"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <View
@@ -36,9 +39,10 @@
         android:padding="10dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/address_company" />
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/icon_company" />
 
         <TextView
             android:id="@+id/tv_company"
@@ -46,6 +50,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:text="设置公司地址"
-            android:textSize="18sp" />
+            android:maxLines="1"
+            android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

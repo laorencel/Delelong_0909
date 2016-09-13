@@ -1,9 +1,7 @@
 package com.delelong.diandian.menuActivity;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -11,7 +9,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.delelong.diandian.BaseActivity;
 import com.delelong.diandian.R;
@@ -23,7 +20,6 @@ public class MallActivity extends BaseActivity {
 
     private static final String URL_LIANCHENG = "http://www.52liancheng.com";
     private static final String TAG = "BAIDUMAPFORTEST";
-    private ProgressDialog dialog;
     WebView webView;
     ProgressBar progressBar;
 
@@ -63,7 +59,6 @@ public class MallActivity extends BaseActivity {
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                Log.i(TAG, "onProgressChanged: ");
                 if (newProgress == 100) {
 //                    closeDialog();
                     progressBar.setVisibility(View.GONE);
@@ -74,30 +69,6 @@ public class MallActivity extends BaseActivity {
                 }
                 super.onProgressChanged(view, newProgress);
             }
-
-//            private void openDialog(int newProgress) {
-//                Log.i(TAG, "openDialog: ");
-//                if (dialog == null) {
-//                    dialog = new ProgressDialog(getApplicationContext());
-////                    dialog.setTitle("加载中...");
-//                    dialog.setProgress(newProgress);
-////                    Drawable drawable = getResources().getDrawable(R.drawable.car);
-////                    dialog.setProgressDrawable(drawable);
-//                    dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//                    dialog.show();
-//                } else {
-//                    dialog.setProgress(newProgress);
-//                }
-//            }
-//
-//            private void closeDialog() {
-//                Log.i(TAG, "closeDialog: ");
-//                if (dialog != null && dialog.isShowing()) {
-//                    dialog.dismiss();
-//                    dialog = null;
-//                }
-//            }
-
         });
     }
 
@@ -112,8 +83,6 @@ public class MallActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (webView != null) {
-                Log.i(TAG, "onKeyDown: ");
-                Toast.makeText(this, webView.getUrl(), Toast.LENGTH_SHORT).show();
                 if (webView.canGoBack()) {
                     webView.goBack();
                     return true;

@@ -1,6 +1,8 @@
 package com.delelong.diandian;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,14 +27,14 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/8/23.
  */
-public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearchListener, TextWatcher,AdapterView.OnItemClickListener {
+public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearchListener, TextWatcher,AdapterView.OnItemClickListener,View.OnClickListener {
 
     private static final String TAG = "BAIDUMAPFORTESTChoosePosition";
     TextView tv_city;
     EditText edt_choose;
     TextView tv_home, tv_company;
     ListView lv_address;
-
+    LinearLayout ly_home_company;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,26 +47,49 @@ public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearc
 
     String city;
     String intentValue;
-
+    SharedPreferences preferences;
     private void initView() {
+        preferences = getSharedPreferences("user",Context.MODE_PRIVATE);
+
         tv_city = (TextView) findViewById(R.id.tv_city);
         edt_choose = (EditText) findViewById(R.id.edt_choose);
 
+        ly_home_company = (LinearLayout) findViewById(R.id.ly_home_company);
         tv_home = (TextView) findViewById(R.id.tv_home);
         tv_company = (TextView) findViewById(R.id.tv_company);
+        tv_home.setOnClickListener(this);
+        tv_company.setOnClickListener(this);
 
         lv_address = (ListView) findViewById(R.id.lv_address);
         lv_address.setDivider(getResources().getDrawable(R.color.listViewDivider));
+        //初始化家庭公司地址
+        String home = preferences.getString("home",null);
+        String company = preferences.getString("company",null);
+        if (home != null){
+            tv_home.setText(home);
+        }
+        if (company != null){
+            tv_company.setText(company);
+        }
         //设置不同的提示语
         intentValue = getIntent().getStringExtra("choose");
-        city = getIntent().getStringExtra("com/delelong/diandian/city");
-        tv_city.setText(city + ">");
-        if (intentValue.equals("myPosition")) {
-            edt_choose.setHint("从哪里出发");
-        } else {
-            edt_choose.setHint("到哪里去");
+        city = getIntent().getStringExtra("city");
+        if (city != null){
+            tv_city.setText(city);
         }
-
+        if (intentValue!=null){
+            if (intentValue.equals("myPosition")) {
+                edt_choose.setHint("从哪里出发");
+            } else if (intentValue.equals("myDestination")){
+                edt_choose.setHint("到哪里去");
+            }else if (intentValue.equals("home")){
+                edt_choose.setHint("设置家庭住址");
+                ly_home_company.setVisibility(View.GONE);
+            }else if (intentValue.equals("company")){
+                edt_choose.setHint("设置公司地址");
+                ly_home_company.setVisibility(View.GONE);
+            }
+        }
         edt_choose.addTextChangedListener(this);
     }
 
@@ -140,6 +166,8 @@ public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearc
     private static final int RESULTNOCHOICECODE = 0;
     private static final int RESULTPOSITIONCODE = 1;
     private static final int RESULTDESTINATIONCODE = 2;
+    private static final int REQUESTHOMECODE = 3;
+    private static final int REQUESTCOMPANYCODE = 4;
 
     /**
      * 点击选择地址，返回地图界面并传值
@@ -162,11 +190,25 @@ public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearc
             //返回结果
             setResult(RESULTPOSITIONCODE, intent);
             finish();
-        } else {
+        } else if (intentValue.equals("myDestination")){
             bundle.putParcelable("PoiInfo", item);
             intent.putExtra("bundle", bundle)
                     .putExtra("key", "myDestination");
             setResult(RESULTDESTINATIONCODE, intent);
+            finish();
+        }
+        else if (intentValue.equals("home")){
+            bundle.putParcelable("PoiInfo", item);
+            intent.putExtra("bundle", bundle)
+                    .putExtra("key", "home");
+            setResult(REQUESTHOMECODE, intent);
+            finish();
+        }
+        else if (intentValue.equals("company")){
+            bundle.putParcelable("PoiInfo", item);
+            intent.putExtra("bundle", bundle)
+                    .putExtra("key", "company");
+            setResult(REQUESTCOMPANYCODE, intent);
             finish();
         }
     }
@@ -178,8 +220,55 @@ public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearc
         super.onBackPressed();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.tv_home:
+                intentActivityForResult(this, ChoosePosition.class, "choose", "home", city, REQUESTHOMECODE);
+                break;
+            case R.id.tv_company:
+                intentActivityForResult(this, ChoosePosition.class, "choose", "company", city, REQUESTCOMPANYCODE);
+                break;
+        }
+    }
 
-/**
+    PoiItem mHomePoiItem;//家庭poi
+    PoiItem mCompanyPoiItem;//公司poi
+    //获取选取的位置信息
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String value = data.getStringExtra("key");
+        if (value.equals("noChoice")) {
+            return;
+        }
+        Bundle bundle = data.getBundleExtra("bundle");
+        switch (resultCode) {
+            case REQUESTHOMECODE:
+                if (value.equals("home")) {
+                    mHomePoiItem = bundle.getParcelable("PoiInfo");
+                    tv_home.setText(mHomePoiItem.getTitle());
+                    preferences.edit()
+                            .putString("home",mHomePoiItem.getTitle())
+                            .putString("homeAddress",mHomePoiItem.getSnippet())
+                            .commit();
+                }
+                break;
+            case REQUESTCOMPANYCODE:
+                if (value.equals("company")) {
+                    mCompanyPoiItem = bundle.getParcelable("PoiInfo");
+                    tv_company.setText(mCompanyPoiItem.getTitle());
+                    preferences.edit()
+                            .putString("company",mCompanyPoiItem.getTitle())
+                            .putString("companyAddress",mCompanyPoiItem.getSnippet())
+                            .commit();
+                }
+                break;
+        }
+    }
+
+
+    /**
  * 适配器
  */
 class MyAddressAdapter extends BaseAdapter {

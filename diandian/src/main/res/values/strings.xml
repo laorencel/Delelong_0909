@@ -21,4 +21,6 @@
     <string name="timeToGo">出发时间</string>
     <string name="rePwd">请确认密码</string>
     <string name="no_result">对不起，没有搜索到相关数据！</string>
+    <string name="commonAddress">常用地址</string>
+    <string name="fanKui">问题反馈</string>
 </resources>

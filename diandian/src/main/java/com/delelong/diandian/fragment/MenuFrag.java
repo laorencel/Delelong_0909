@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.delelong.diandian.BaseActivity.MyHeadTask;
 import com.delelong.diandian.MainActivity;
@@ -27,6 +26,7 @@ import com.delelong.diandian.R;
 import com.delelong.diandian.adapter.MyMenuLvAdapter;
 import com.delelong.diandian.bean.Client;
 import com.delelong.diandian.bean.MenuListItem;
+import com.delelong.diandian.menuActivity.FeedBackActivity;
 import com.delelong.diandian.menuActivity.MallActivity;
 import com.delelong.diandian.menuActivity.MenuInfoActivity;
 import com.delelong.diandian.menuActivity.SettingActivity;
@@ -75,12 +75,6 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
         }
     }
 
-    private void setListener() {
-        img_head.setOnClickListener(this);
-        ly_back.setOnClickListener(this);
-        lv_menu.setOnItemClickListener(this);
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -122,7 +116,7 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
 
                         break;
                     case 2://问题反馈
-
+                        activity.startActivity(new Intent(activity, FeedBackActivity.class));
                         break;
                     case 3://推荐有奖
 
@@ -138,7 +132,12 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
                         break;
                     case 7://设    置
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("client", client);
+                        if (activity.myAMapLocation != null) {
+                            bundle.putSerializable("myAMapLocation", activity.myAMapLocation);//传递我的位置
+                        }
+                        if (client != null) {
+                            bundle.putSerializable("client", client);
+                        }
                         activity.intentActivityWithBundle(activity, SettingActivity.class, bundle);
                         break;
                 }
@@ -161,7 +160,7 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
     private void initView() {
         mGestureDetector = new GestureDetector(new MySimpleGestureListener());
         menu_frag = (LinearLayout) view.findViewById(R.id.menu_frag);
-        menu_frag.setOnTouchListener(this);
+
 
         ly_display = (LinearLayout) view.findViewById(R.id.ly_display);
         //更多更能滑动显示效果（取消显示按钮，不用此功能了）
@@ -172,13 +171,20 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
         nick_name = (TextView) view.findViewById(R.id.nick_name);
 
         lv_menu = (ListView) view.findViewById(R.id.lv_menu);
-        lv_menu.setOnTouchListener(this);
 
         btn_loginOut = (Button) view.findViewById(R.id.btn_loginOut);
 
         ly_back = (LinearLayout) view.findViewById(R.id.ly_back);
         //加载ListView
         initListView();
+    }
+    private void setListener() {
+        img_head.setOnClickListener(this);
+        ly_back.setOnClickListener(this);
+        btn_loginOut.setOnClickListener(this);
+        lv_menu.setOnItemClickListener(this);
+        lv_menu.setOnTouchListener(this);
+        menu_frag.setOnTouchListener(this);
     }
 
     private List<MenuListItem> itemList;
@@ -252,7 +258,7 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
         /*****
          * OnGestureListener的函数
          *****/
-        final int FLING_MIN_DISTANCE = 100, FLING_MIN_VELOCITY = 200;
+        final int FLING_MIN_DISTANCE = 200, FLING_MIN_VELOCITY = 200;
         // 触发条件 ：
         // X轴的坐标位移大于FLING_MIN_DISTANCE，且移动速度大于FLING_MIN_VELOCITY个像素/秒
 
@@ -268,12 +274,10 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
                 // Fling left
                 Log.i(TAG, "Fling left");
                 hideMenu();//隐藏菜单栏
-                Toast.makeText(activity, "Fling Left", Toast.LENGTH_SHORT).show();
             } else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE
                     && Math.abs(velocityX) > FLING_MIN_VELOCITY) {
                 // Fling right
                 Log.i(TAG, "Fling right");
-                Toast.makeText(activity, "Fling Right", Toast.LENGTH_SHORT).show();
             }
             return true;
         }

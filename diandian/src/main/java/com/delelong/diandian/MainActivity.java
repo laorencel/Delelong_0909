@@ -457,7 +457,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     mPositionPoiItem = bundle.getParcelable("PoiInfo");
                     Log.i(TAG, "onActivityResult: " + mPositionPoiItem.getTitle());
                     myPosition.setText(mPositionPoiItem.getTitle());
-
 //                    client.setStartLatitude(mPositionPoiItem.getLatLonPoint().getLatitude());
 //                    client.setStartLongitude(mPositionPoiItem.getLatLonPoint().getLongitude());
                 }
@@ -614,7 +613,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mLocationClient.startLocation();
         aMap.setMyLocationEnabled(true);
 //        aMap.setMyLocationStyle(myLocationStyle);
-        isForeground = true;
     }
 
     private boolean isTwice = false;
@@ -656,6 +654,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     //从fragment退回，显示actionbar
                     actionBar.show();
                 }
+                if (!myPosition.isEnabled()){
+                    enableClick();
+                }
+                isForeground = !isForeground;
                 return super.onKeyDown(keyCode, event);
             }
         }

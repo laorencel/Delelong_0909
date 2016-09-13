@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     android:background="#eaeaea"
     android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/frag"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

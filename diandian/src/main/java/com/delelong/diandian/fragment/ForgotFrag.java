@@ -14,8 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.delelong.diandian.LoginActivity;
 import com.delelong.diandian.R;
+import com.delelong.diandian.menuActivity.SettingActivity;
 import com.delelong.diandian.utils.MD5;
 
 import java.util.List;
@@ -108,8 +108,8 @@ public class ForgotFrag extends Fragment implements View.OnClickListener{
                     Toast.makeText(activity, "请填写手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (pwd_edt.isEmpty()||rePwd_edt.isEmpty()) {
-                    Toast.makeText(activity, "密码不能为空", Toast.LENGTH_SHORT).show();
+                if (pwd_edt.isEmpty()||pwd_edt.length()<6) {
+                    Toast.makeText(activity, "密码长度不能小于6位", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -180,13 +180,13 @@ public class ForgotFrag extends Fragment implements View.OnClickListener{
             resultForVerific =activity.getHttpResultForVerification(URL_SMSCODE, phone, TYPE_RESET);
         }
     }
-    LoginActivity activity;
+    SettingActivity activity;
     SharedPreferences preferences;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (LoginActivity) getActivity();
-        preferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
+        activity = (SettingActivity) getActivity();
+        preferences = activity.getSharedPreferences("user", Context.MODE_PRIVATE);
     }
 }
