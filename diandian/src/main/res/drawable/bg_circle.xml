@@ -9,10 +9,10 @@
         android:right="2dp"
         android:bottom="1dp" />
     <solid
-        android:color="@color/colorAccent" />
+        android:color="@color/colorAlpha" />
     <stroke
         android:width="0.2dp"
-        android:color="@android:color/black" />
+        android:color="@color/colorGray" />
     <size android:width="30dp"
         android:height="30dp" />
 </shape>

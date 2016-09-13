@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menu_frag"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#a0000000"
-    android:id="@+id/menu_frag"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -22,19 +23,20 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <ImageView
+            <com.delelong.diandian.view.RoundImageView
                 android:id="@+id/img_head"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_margin="20dp"
-                android:background="@mipmap/img_head_menu" />
+                android:scaleType="centerCrop"
+                android:src="@mipmap/img_head_menu" />
 
             <TextView
                 android:id="@+id/nick_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="余先生"
                 android:layout_marginBottom="20dp"
+                android:text="先生"
                 android:textSize="16sp" />
 
             <View
@@ -43,51 +45,34 @@
                 android:background="#bfbfbf"></View>
         </LinearLayout>
         <!--正文部分-->
+
         <LinearLayout
             android:id="@+id/ly_display"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <LinearLayout
-                android:id="@+id/ly_lv_menu"
+            <ListView
+                android:id="@+id/lv_menu"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:divider="@null"></ListView>
 
-                <ListView
-                    android:id="@+id/lv_menu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@null"></ListView>
-            </LinearLayout>
-            <!--更多-->
-            <LinearLayout
-                android:id="@+id/ly_menu_more"
+            <Button
+                android:id="@+id/btn_loginOut"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="10dp">
-
-                <ImageView
-                    android:id="@+id/narrow_menu"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/arrow_up" />
-
-                <GridView
-                    android:id="@+id/gv_menu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:numColumns="2"></GridView>
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_loginout"
+                android:padding="8dp"
+                android:text="退出登陆"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
         </LinearLayout>
+
+
     </LinearLayout>
     <!--透明部分-->
     <LinearLayout

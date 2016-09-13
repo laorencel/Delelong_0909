@@ -21,38 +21,38 @@ import com.delelong.diandian.utils.MD5;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/8/19.
+ * Created by Administrator on 2016/9/12.
  */
-public class RegisterFrag extends Fragment implements View.OnClickListener {
-    private static final String URL_REGISTER = "http://121.40.142.141:8090/Jfinal/api/register";
+public class ForgotFrag extends Fragment implements View.OnClickListener{
+
+    private static final String URL_FORGOT = "http://121.40.142.141:8090/Jfinal/api/member/reset/password";
     private static final String URL_SMSCODE = "http://121.40.142.141:8090/Jfinal/api/smscode";
     //验证码类型(1:注册;2:忘记密码;3:更换手机号;)
-    private static final String TYPE_REGISTER = "1";
+    private static final String TYPE_RESET = "2";
     View view;
-
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_register, container, false);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.frag_forgot,container,false);
         initView();
         return view;
     }
 
-    EditText edt_phone, edt_verificationCode, edt_newPwd, edt_rePwd;
-    Button btn_verificationCode, btn_register;
-    ImageButton img_showPwd,img_showPwd1, btn_back;
-
+    ImageButton btn_back;
+    EditText edt_phone,edt_newPwd,edt_rePwd,edt_verificationCode;
+    ImageButton img_showPwd,img_showPwd1;
+    Button btn_verificationCode,btn_confirm;
     private void initView() {
+        btn_back = (ImageButton) view.findViewById(R.id.btn_back);
         edt_phone = (EditText) view.findViewById(R.id.edt_phone);
-        edt_verificationCode = (EditText) view.findViewById(R.id.edt_verificationCode);
         edt_newPwd = (EditText) view.findViewById(R.id.edt_newPwd);
         edt_rePwd = (EditText) view.findViewById(R.id.edt_rePwd);
+        edt_verificationCode = (EditText) view.findViewById(R.id.edt_verificationCode);
 
         btn_verificationCode = (Button) view.findViewById(R.id.btn_verificationCode);
-        btn_register = (Button) view.findViewById(R.id.btn_register);
+        btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
         btn_verificationCode.setOnClickListener(this);
-        btn_register.setOnClickListener(this);
+        btn_confirm.setOnClickListener(this);
 
         img_showPwd = (ImageButton) view.findViewById(R.id.img_showPwd);
         img_showPwd1 = (ImageButton) view.findViewById(R.id.img_showPwd1);
@@ -62,10 +62,8 @@ public class RegisterFrag extends Fragment implements View.OnClickListener {
         btn_back.setOnClickListener(this);
     }
 
-    private boolean showPwd;
     private String phone, verificationCode, pwd, rePwd;
-    List<String> resultForReg;
-
+    List<String> resultForReset;
     @Override
     public void onClick(View v) {
         phone = edt_phone.getText().toString();
@@ -97,7 +95,7 @@ public class RegisterFrag extends Fragment implements View.OnClickListener {
                     }
                 }
                 break;
-            case R.id.btn_register:
+            case R.id.btn_confirm:
                 if (!pwd_edt.equals(rePwd_edt)) {
                     Toast.makeText(activity, "请确认密码一致", Toast.LENGTH_SHORT).show();
                     return;
@@ -110,22 +108,28 @@ public class RegisterFrag extends Fragment implements View.OnClickListener {
                     Toast.makeText(activity, "请填写手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                resultForReg = activity.registerApp(URL_REGISTER, phone, verificationCode, pwd, rePwd);
-                if (resultForReg.get(0).equals("FAILURE")) {
-                    resultForReg = activity.registerApp(URL_REGISTER, phone, verificationCode, pwd, rePwd);
-                    if (resultForReg.get(0).equals("FAILURE")) {
-                        Toast.makeText(activity, "注册失败"+resultForReg.get(1), Toast.LENGTH_SHORT).show();
+                if (pwd_edt.isEmpty()||rePwd_edt.isEmpty()) {
+                    Toast.makeText(activity, "密码不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                resultForReset = activity.resetPwd(URL_FORGOT, phone, verificationCode, pwd, rePwd);
+                if (resultForReset.get(0).equals("FAILURE")) {
+                    resultForReset = activity.resetPwd(URL_FORGOT, phone, verificationCode, pwd, rePwd);
+                    if (resultForReset.get(0).equals("FAILURE")) {
+                        Toast.makeText(activity, "修改失败"+resultForReset.get(1), Toast.LENGTH_SHORT).show();
                         return;
                     }
-                } else if (resultForReg.get(0).equals("ERROR")) {
-                    resultForReg = activity.registerApp(URL_REGISTER, phone, verificationCode, pwd, rePwd);
-                    if (resultForReg.get(0).equals("ERROR")) {
-                        Toast.makeText(activity, "注册错误"+resultForReg.get(1), Toast.LENGTH_SHORT).show();
+                } else if (resultForReset.get(0).equals("ERROR")) {
+                    resultForReset = activity.resetPwd(URL_FORGOT, phone, verificationCode, pwd, rePwd);
+                    if (resultForReset.get(0).equals("ERROR")) {
+                        Toast.makeText(activity, "修改错误"+resultForReset.get(1), Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
+
                 //注册成功,返回登陆界面
-                Toast.makeText(activity, "注册成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "修改密码成功", Toast.LENGTH_SHORT).show();
                 //保存手机号并设置为首次登陆（进入登陆页面）
                 boolean firstLogin = true;
                 preferences.edit()
@@ -138,6 +142,24 @@ public class RegisterFrag extends Fragment implements View.OnClickListener {
         }
     }
 
+    private boolean showPwd;
+    /**
+     * 切换显示密码
+     */
+    private void showPwd() {
+        if (showPwd) {
+            edt_newPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            edt_rePwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            img_showPwd.setImageResource(R.drawable.show_open);
+            img_showPwd1.setImageResource(R.drawable.show_open);
+        } else {
+            edt_newPwd.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            edt_rePwd.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            img_showPwd.setImageResource(R.drawable.show_close);
+            img_showPwd1.setImageResource(R.drawable.show_close);
+        }
+        showPwd = !showPwd;
+    }
     private void postForVerification() {
         MyHttpRun code = new MyHttpRun();
         Thread thread = new Thread(code);
@@ -155,29 +177,9 @@ public class RegisterFrag extends Fragment implements View.OnClickListener {
         @Override
         public void run() {
             //type:(1:注册;2:忘记密码;3:更换手机号;)
-            resultForVerific = activity.getHttpResultForVerification(URL_SMSCODE, phone, TYPE_REGISTER);
+            resultForVerific =activity.getHttpResultForVerification(URL_SMSCODE, phone, TYPE_RESET);
         }
     }
-
-    /**
-     * 切换显示密码
-     */
-    private void showPwd() {
-        if (showPwd) {
-            edt_newPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            edt_rePwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            img_showPwd.setImageResource(R.drawable.show_open);
-            img_showPwd1.setImageResource(R.drawable.show_open);
-        } else {
-            edt_newPwd.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            edt_rePwd.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            img_showPwd.setImageResource(R.drawable.show_close);
-            img_showPwd1.setImageResource(R.drawable.show_close);
-        }
-        showPwd = !showPwd;
-
-    }
-
     LoginActivity activity;
     SharedPreferences preferences;
 
@@ -187,6 +189,4 @@ public class RegisterFrag extends Fragment implements View.OnClickListener {
         activity = (LoginActivity) getActivity();
         preferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
     }
-
-
 }

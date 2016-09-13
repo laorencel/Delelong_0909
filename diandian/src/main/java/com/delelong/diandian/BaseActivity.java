@@ -84,13 +84,15 @@ public class BaseActivity extends AppCompatActivity {
      * @return 登录结果
      */
     public List<String> loginApp(String url_upDate, String name, String pwd) {
+        preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+        token = preferences.getString("token", null);
+        secret = preferences.getString("sercet", null);
         if (registrationId == null) {
             registrationId = JPushInterface.getRegistrationID(getApplicationContext());
             if (registrationId.isEmpty()) {
                 preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
                 registrationId = preferences.getString("registrationId", "");
             }
-            Log.i(TAG, "BaseActivity:registrationId: " + registrationId);
         }
         String upDateStr = "username=" + name + "&registrationId=" + registrationId + "&password=" + pwd;//注册
 
@@ -100,28 +102,22 @@ public class BaseActivity extends AppCompatActivity {
         return loginResultByJson(httpResult);
     }
 
-    private boolean firstLogin = true;
-    String token, secret;
-    SharedPreferences preferences;
-
     /**
-     * 使用token与sercet登陆，无需输入账号密码
+     * 注册
      *
-     * @param url_upDate
-     * @param name
-     * @param pwd
-     * @return
+     * @param url_upDate url
+     * @param phone       用户名
+     * @param pwd        密码
+     * @return 注册结果
      */
-    public List<String> loginAppByPreferences(String url_upDate, String name, String pwd) {
-        preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
-        token = preferences.getString("token", null);
-        secret = preferences.getString("sercet", null);
-
-        firstLogin = false;
-        String upDateStr = "username=" + name + "&password=" + pwd;//注册
+    public List<String> resetPwd(String url_upDate, String phone, String verification, String pwd, String rePwd) {
+        String upDateStr = "phone=" + phone + "&code=" + verification + "&rePassword=" + rePwd + "&password=" + pwd;//注册
         getHttpMsg(url_upDate, upDateStr);
         return loginResultByJson(httpResult);
     }
+
+    String token, secret;
+    SharedPreferences preferences;
 
     /**
      * 修改密码
@@ -191,7 +187,6 @@ public class BaseActivity extends AppCompatActivity {
                 else if (data.has("path")){
                     //返回了文件路径
                     String path = (String) data.get("path");
-                    Log.i(TAG, "analysisJsonObject:path "+path);
                     String name = (String) data.get("name");
                     String type = (String) data.get("type");
                     list.add(path);
@@ -271,14 +266,20 @@ public class BaseActivity extends AppCompatActivity {
 
             }
             //修改密码接口
-            else if (url_upDate.substring(url_upDate.length() - 8, url_upDate.length()).equals("password")) {
+            else if (url_upDate.contains("update/password")) {
+//            else if (url_upDate.substring(url_upDate.length() - 8, url_upDate.length()).equals("password")) {
                 connection.addRequestProperty("token", token);
                 connection.addRequestProperty("secret", secret);
             }
             //更新会员信息接口
-            else if (url_upDate.substring(url_upDate.length() - 6, url_upDate.length()).equals("update")) {
+            else if (url_upDate.contains("member/update")) {
+//            else if (url_upDate.substring(url_upDate.length() - 6, url_upDate.length()).equals("update")) {
                 connection.addRequestProperty("token", token);
                 connection.addRequestProperty("secret", secret);
+            }
+            //忘记密码接口
+            else if (url_upDate.contains("reset/password")) {
+
             }
 
             connection.setDoOutput(true);
@@ -490,6 +491,17 @@ public class BaseActivity extends AppCompatActivity {
         return client;
     }
 
+    /**
+     * 注销登陆
+     * @param url_upDate
+     * @return  client
+     */
+    public List<String> getLoginOutResultByGET(String url_upDate) {
+        //利用线程获取数据
+        getHttpMsgByGET(url_upDate);
+        return loginResultByJson(httpResult);
+    }
+
     //////////////////////////////////////////////////////////////////////上传文件
 
     /**
@@ -519,7 +531,6 @@ public class BaseActivity extends AppCompatActivity {
             dataOutputStream.writeBytes("Content-Disposition: form-data; "+
                     "name=\"file1\";filename=\""+
                     filePath.substring(filePath.length()-19,filePath.length()) +"\""+ end);
-            Log.i(TAG, "httpUpDateFile: filePath////"+ filePath.substring(filePath.length()-19,filePath.length())+"=======================");
 
             dataOutputStream.writeBytes(end);
 
@@ -549,7 +560,6 @@ public class BaseActivity extends AppCompatActivity {
             e.printStackTrace();
             Log.i(TAG, "httpUpDateFile: "+e);
         }
-        Log.i(TAG, "httpUpDateFile:111111111111111 " + stringBuilder.toString());
         return stringBuilder.toString();
     }
 
@@ -578,7 +588,6 @@ public class BaseActivity extends AppCompatActivity {
         public void run() {
             super.run();
             httpResult1 = httpUpDateFile(url_upDate, filePath);
-            Log.i(TAG, "run:=== "+httpResult1);
         }
     }
 
@@ -701,7 +710,7 @@ public class BaseActivity extends AppCompatActivity {
         cursor.close();
         return bitmap;
     }
-    public class MyHeadTask extends AsyncTask<String, Void, Bitmap> {
+    public static class MyHeadTask extends AsyncTask<String, Void, Bitmap> {
         ImageView img_head;
         public MyHeadTask(ImageView img_head){
             this.img_head = img_head;

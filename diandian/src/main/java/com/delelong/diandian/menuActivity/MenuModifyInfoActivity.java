@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +22,7 @@ import com.delelong.diandian.bean.Client;
 import com.delelong.diandian.numberPicker.ChooseCityInterface;
 import com.delelong.diandian.numberPicker.ChooseCityUtil;
 import com.delelong.diandian.pace.MyAMapLocation;
+import com.delelong.diandian.view.RoundImageView;
 
 import java.io.File;
 import java.util.Calendar;
@@ -55,7 +55,7 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
 
 
     LinearLayout ly_modifyHead;
-    ImageView img_head;
+    RoundImageView img_head;
 
     EditText edt_nickName, edt_gender, edt_email;
     EditText edt_realName, edt_certificateNno;
@@ -67,7 +67,9 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
 
     private void initView() {
         //头像
-        img_head = (ImageView) findViewById(R.id.img_head);
+        img_head = (RoundImageView) findViewById(R.id.img_head);
+        img_head.setType(RoundImageView.TYPE_CIRCLE);
+
         img_head.setOnClickListener(this);
         //昵称 性别 email
         edt_nickName = (EditText) findViewById(R.id.edt_nickName);
@@ -246,7 +248,10 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
         postCode_bundle = myAMapLocation.getPostCode();
 
 //        client = getClientByGET(URL_MEMBER);//从服务器获取
-        client = (Client) bundle.getSerializable("Client");//从上级activity获取
+        client = (Client) bundle.getSerializable("client");//从上级activity获取
+        if (client == null){
+            client = getClientByGET(URL_MEMBER);
+        }
         Log.i(TAG, "initMsg: " + client);
         int level = client.getLevel();
         String phone = client.getPhone();

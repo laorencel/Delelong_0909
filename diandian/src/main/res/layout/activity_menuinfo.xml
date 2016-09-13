@@ -33,12 +33,13 @@
         android:layout_marginBottom="25dp"
         android:padding="15dp">
 
-        <ImageView
+        <com.delelong.diandian.view.RoundImageView
             android:id="@+id/img_head"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_margin="20dp"
-            android:background="@mipmap/img_head_menuinfo" />
+            android:scaleType="centerCrop"
+            android:src="@mipmap/img_head_menuinfo" />
 
         <TextView
             android:id="@+id/tv_nick_name"

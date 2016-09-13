@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/8/26.
@@ -54,8 +57,18 @@ public class StartActivity extends BaseActivity {
         } else {
             phone = preferences.getString("phone", null);
             pwd = preferences.getString("pwd", null);
-            loginAppByPreferences(URL_LOGIN, phone, pwd);
-            startActivity(new Intent(this, MainActivity.class));
+            List<String> loginResult = loginApp(URL_LOGIN, phone, pwd);
+
+            if (loginResult.get(0).equalsIgnoreCase("OK")){
+                startActivity(new Intent(this, MainActivity.class));
+            }
+            else if (loginResult.get(0).equals("ERROR")) {
+                Toast.makeText(this, "登陆出错,请重新登陆", Toast.LENGTH_SHORT).show();
+                return;
+            }else if (loginResult.get(0).equals("FAILURE")) {
+                Toast.makeText(this, "登陆失败,请重新登陆", Toast.LENGTH_SHORT).show();
+                return;
+            }
             finish();
         }
     }

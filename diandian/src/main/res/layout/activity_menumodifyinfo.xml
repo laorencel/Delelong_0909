@@ -42,10 +42,11 @@
         android:orientation="horizontal"
         android:padding="15dp">
 
-        <ImageView
+        <com.delelong.diandian.view.RoundImageView
             android:id="@+id/img_head"
             android:layout_width="72dp"
             android:layout_height="72dp"
+            android:scaleType="centerCrop"
             android:src="@mipmap/img_head_menuinfo" />
 
         <TextView

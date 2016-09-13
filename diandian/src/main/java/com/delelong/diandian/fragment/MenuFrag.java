@@ -3,28 +3,34 @@ package com.delelong.diandian.fragment;
 import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.delelong.diandian.BaseActivity.MyHeadTask;
 import com.delelong.diandian.MainActivity;
 import com.delelong.diandian.R;
-import com.delelong.diandian.adapter.MyMenuGridAdapter;
 import com.delelong.diandian.adapter.MyMenuLvAdapter;
+import com.delelong.diandian.bean.Client;
 import com.delelong.diandian.bean.MenuListItem;
+import com.delelong.diandian.menuActivity.MallActivity;
 import com.delelong.diandian.menuActivity.MenuInfoActivity;
 import com.delelong.diandian.menuActivity.SettingActivity;
+import com.delelong.diandian.view.RoundImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,30 +38,47 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/9/5.
  */
-public class MenuFrag extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener,View.OnTouchListener {
+public class MenuFrag extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
 
+    private static final String URL_MEMBER = "http://121.40.142.141:8090/Jfinal/api/member";//获取会员信息
+    private static final String URL_LOGINOUT = "http://121.40.142.141:8090/Jfinal/api/logout";//注销登陆
+    private static final String URL_HEAD_PORTRAIT = "http://121.40.142.141:8090/Jfinal/";//图片头地址
     private static final String TAG = "BAIDUMAPFORTEST";
+
     View view;
     LayoutTransition transition;
     MenuFrag menuFrag;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_menu, container, false);
 
         initView();
+        initClient();
         setListener();
         return view;
     }
 
+    Client client;
+
+    private void initClient() {
+        client = activity.getClientByGET(URL_MEMBER);
+        String phone = client.getPhone();
+        String nick_name = client.getNick_name();
+        String head_portrait = client.getHead_portrait();
+
+        MyHeadTask myHeadTask = new MyHeadTask(img_head);
+        myHeadTask.execute(URL_HEAD_PORTRAIT, head_portrait);
+        if (!nick_name.isEmpty()) {
+            this.nick_name.setText(nick_name);
+        }
+    }
+
     private void setListener() {
         img_head.setOnClickListener(this);
-
         ly_back.setOnClickListener(this);
-        narrow_menu.setOnClickListener(this);
-
         lv_menu.setOnItemClickListener(this);
-        gv_menu.setOnItemClickListener(this);
     }
 
     @Override
@@ -64,21 +87,23 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
             case R.id.img_head:
                 //编辑个人信息页面
                 Bundle bundle = new Bundle();
-                if (activity.myAMapLocation != null){
-                    bundle.putSerializable("myAMapLocation",activity.myAMapLocation);//传递我的位置
+                if (activity.myAMapLocation != null) {
+                    bundle.putSerializable("myAMapLocation", activity.myAMapLocation);//传递我的位置
                 }
-                activity.intentActivityWithBundle(activity,MenuInfoActivity.class,bundle);
+                if (client != null) {
+                    bundle.putSerializable("client", client);
+                }
+                activity.intentActivityWithBundle(activity, MenuInfoActivity.class, bundle);
                 break;
             case R.id.ly_back:
                 hideMenu();//隐藏本菜单界面
                 break;
-            case R.id.narrow_menu:
-                //箭头显示隐藏更多功能
-                if (showGrid)
-                    showLvMenu();
-                else
-                    hideLvMenu();
-                showGrid = !showGrid;
+            case R.id.btn_loginOut:
+                List<String> loginOutResult = activity.getLoginOutResultByGET(URL_LOGINOUT);
+                if (loginOutResult.get(0).equalsIgnoreCase("OK")){
+                    hideMenu();//隐藏本菜单界面
+                    activity.setLogining(false);
+                }
                 break;
         }
     }
@@ -90,41 +115,31 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
                 //ListView
                 switch (position) {
                     //item position
-                    case 0:
+                    case 0://我的行程
 
                         break;
-                    case 1:
+                    case 1://我的钱包
 
                         break;
-                    case 2:
+                    case 2://问题反馈
 
                         break;
-                    case 3:
-                        activity.startActivity(new Intent(activity, SettingActivity.class));
-                        break;
-                }
-                break;
-            case R.id.gv_menu:
-                //GridView
-                switch (position) {
-                    //item position
-                    case 0:
+                    case 3://推荐有奖
 
                         break;
-                    case 1:
+                    case 4://司机招募
 
                         break;
-                    case 2:
+                    case 5://合作商城
+                        activity.startActivity(new Intent(activity, MallActivity.class));
+                        break;
+                    case 6://兑 换 码
 
                         break;
-                    case 3:
-
-                        break;
-                    case 4:
-
-                        break;
-                    case 5:
-
+                    case 7://设    置
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("client", client);
+                        activity.intentActivityWithBundle(activity, SettingActivity.class, bundle);
                         break;
                 }
                 break;
@@ -136,76 +151,61 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
 
     LinearLayout menu_frag;
     LinearLayout ly_display;
-    ImageView img_head;
+    RoundImageView img_head;
     TextView nick_name;
     ListView lv_menu;
-    GridView gv_menu;
-    ImageView narrow_menu;//上下箭头
-    LinearLayout ly_lv_menu;
-    LinearLayout ly_menu_more;//箭头控制显示、隐藏更多功能
+    Button btn_loginOut;
+
     LinearLayout ly_back;//隐藏菜单
 
     private void initView() {
+        mGestureDetector = new GestureDetector(new MySimpleGestureListener());
         menu_frag = (LinearLayout) view.findViewById(R.id.menu_frag);
-//        menu_frag.setOnTouchListener(this);
+        menu_frag.setOnTouchListener(this);
 
         ly_display = (LinearLayout) view.findViewById(R.id.ly_display);
-        //更多更能滑动显示效果
-        transition = new LayoutTransition();
-        ly_display.setLayoutTransition(transition);
+        //更多更能滑动显示效果（取消显示按钮，不用此功能了）
+//        transition = new LayoutTransition();
+//        ly_display.setLayoutTransition(transition);
 
-        img_head = (ImageView) view.findViewById(R.id.img_head);
+        img_head = (RoundImageView) view.findViewById(R.id.img_head);
         nick_name = (TextView) view.findViewById(R.id.nick_name);
 
-        ly_lv_menu = (LinearLayout) view.findViewById(R.id.ly_lv_menu);
         lv_menu = (ListView) view.findViewById(R.id.lv_menu);
+        lv_menu.setOnTouchListener(this);
 
-        ly_menu_more = (LinearLayout) view.findViewById(R.id.ly_menu_more);
-        narrow_menu = (ImageView) view.findViewById(R.id.narrow_menu);
-        gv_menu = (GridView) view.findViewById(R.id.gv_menu);
+        btn_loginOut = (Button) view.findViewById(R.id.btn_loginOut);
 
         ly_back = (LinearLayout) view.findViewById(R.id.ly_back);
         //加载ListView
         initListView();
-        initGridView();
     }
 
     private List<MenuListItem> itemList;
     private MyMenuLvAdapter myLvAdapter;
 
     private void initListView() {
-        MenuListItem item0 = new MenuListItem(R.drawable.img_l_m_history, "行程");
-        MenuListItem item1 = new MenuListItem(R.drawable.img_l_m_wallet, "钱包");
-        MenuListItem item2 = new MenuListItem(R.drawable.img_l_m_service, "客服");
-        MenuListItem item3 = new MenuListItem(R.drawable.img_l_m_settings, "设置");
+        MenuListItem item0 = new MenuListItem(R.drawable.icon_menu_xingcheng, "我的行程");
+        MenuListItem item1 = new MenuListItem(R.drawable.icon_menu_qianbao, "我的钱包");
+        MenuListItem item2 = new MenuListItem(R.drawable.icon_menu_fankui, "问题反馈");
+        MenuListItem item3 = new MenuListItem(R.drawable.icon_menu_tuijian, "推荐有奖");
+        MenuListItem item4 = new MenuListItem(R.drawable.icon_menu_zhaomu, "司机招募");
+        MenuListItem item5 = new MenuListItem(R.drawable.icon_menu_hezuo, "合作商城");
+        MenuListItem item6 = new MenuListItem(R.drawable.icon_menu_duihuan, "兑  换  码");
+        MenuListItem item7 = new MenuListItem(R.drawable.icon_menu_shezhi, "设        置");
         itemList = new ArrayList<>();
         itemList.add(item0);
         itemList.add(item1);
         itemList.add(item2);
         itemList.add(item3);
+        itemList.add(item4);
+        itemList.add(item5);
+        itemList.add(item6);
+        itemList.add(item7);
 
         myLvAdapter = new MyMenuLvAdapter(activity, itemList);
         lv_menu.setAdapter(myLvAdapter);
     }
-
-    private List<MenuListItem> itemGrid;
-    private MyMenuGridAdapter myGridAdapter;
-
-    private void initGridView() {
-        MenuListItem item0 = new MenuListItem(R.drawable.img_g_m_tuijian, "推荐有奖");
-        MenuListItem item1 = new MenuListItem(R.drawable.img_g_m_zhaomu, "司机招募");
-        MenuListItem item2 = new MenuListItem(R.drawable.img_g_m_duihuanma, "兑换码");
-        MenuListItem item3 = new MenuListItem(R.drawable.img_g_m_jifen, "合作商场");
-        itemGrid = new ArrayList<>();
-        itemGrid.add(item0);
-        itemGrid.add(item1);
-        itemGrid.add(item2);
-        itemGrid.add(item3);
-
-        myGridAdapter = new MyMenuGridAdapter(activity, itemGrid);
-        gv_menu.setAdapter(myGridAdapter);
-    }
-
 
     MainActivity activity;
 
@@ -213,6 +213,18 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (MainActivity) getActivity();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (!activity.getSupportActionBar().isShowing())
+            activity.getSupportActionBar().show();
     }
 
     /**
@@ -223,44 +235,48 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
         if (menuFrag == null) {
             menuFrag = (MenuFrag) activity.getFragmentManager().findFragmentByTag("menuFrag");
         }
-        activity.getFragmentManager().beginTransaction().hide(menuFrag).commit();
+        activity.getFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).hide(menuFrag).commit();
         activity.getSupportActionBar().show();
         activity.enableClick();//地图层按钮可用
     }
 
-    /**
-     * 下拉箭头显示更多功能
-     */
-    private void showLvMenu() {
-        narrow_menu.setBackgroundResource(R.drawable.arrow_up);
-        ly_lv_menu.setVisibility(View.VISIBLE);
-        lv_menu.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * 下拉箭头隐藏更多功能
-     */
-    private void hideLvMenu() {
-        narrow_menu.setBackgroundResource(R.drawable.arrow_down);
-        ly_lv_menu.setVisibility(View.GONE);
-        lv_menu.setVisibility(View.GONE);
-    }
-    float startY = 0.0f;
-    float endY = 0.0f;
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                startY = event.getY();
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                endY = event.getY();
-//                break;
-//        }
-//        if (startY - endY > 400) {
-//            hideMenu();//隐藏本菜单界面
-//        }
-//        return true;
-        return false;
+        return mGestureDetector.onTouchEvent(event);
+    }
+
+    private GestureDetector mGestureDetector;
+
+    private class MySimpleGestureListener extends
+            GestureDetector.SimpleOnGestureListener {
+        /*****
+         * OnGestureListener的函数
+         *****/
+        final int FLING_MIN_DISTANCE = 100, FLING_MIN_VELOCITY = 200;
+        // 触发条件 ：
+        // X轴的坐标位移大于FLING_MIN_DISTANCE，且移动速度大于FLING_MIN_VELOCITY个像素/秒
+
+        // 参数解释：
+        // e1：第1个ACTION_DOWN MotionEvent
+        // e2：最后一个ACTION_MOVE MotionEvent
+        // velocityX：X轴上的移动速度，像素/秒
+        // velocityY：Y轴上的移动速度，像素/秒
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                               float velocityY) {
+            if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE
+                    && Math.abs(velocityX) > FLING_MIN_VELOCITY) {
+                // Fling left
+                Log.i(TAG, "Fling left");
+                hideMenu();//隐藏菜单栏
+                Toast.makeText(activity, "Fling Left", Toast.LENGTH_SHORT).show();
+            } else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE
+                    && Math.abs(velocityX) > FLING_MIN_VELOCITY) {
+                // Fling right
+                Log.i(TAG, "Fling right");
+                Toast.makeText(activity, "Fling Right", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
+
     }
 }

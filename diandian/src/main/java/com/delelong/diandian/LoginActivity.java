@@ -9,8 +9,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
+import com.delelong.diandian.fragment.ForgotFrag;
 import com.delelong.diandian.fragment.LoginFrag;
-import com.delelong.diandian.fragment.ModifyFrag;
 import com.delelong.diandian.fragment.RegisterFrag;
 
 /**
@@ -22,7 +22,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     FragmentManager fragmentManager;
     LoginFrag loginFrag;
     RegisterFrag registerFrag;
-    ModifyFrag modifyFrag;
+    ForgotFrag forgotFrag;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +37,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         fragmentManager = getFragmentManager();
         loginFrag = new LoginFrag();
         registerFrag = new RegisterFrag();
-        modifyFrag = new ModifyFrag();
+        forgotFrag = new ForgotFrag();
         fragmentManager.beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .add(R.id.rl1,loginFrag,"loginFrag")
@@ -69,9 +69,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             case R.id.tv_forgotPwd:
                 fragmentManager.beginTransaction()
 //                        .setCustomAnimations(R.anim.frag_in,0,0,R.anim.frag_out)
-                        .add(R.id.rl2,modifyFrag,"modifyFrag")
+                        .add(R.id.rl2,forgotFrag,"modifyFrag")
                         .hide(loginFrag)
-                        .show(registerFrag)
+                        .show(forgotFrag)
                         .addToBackStack(null)
                         .commit();
                 break;
@@ -80,7 +80,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 //                        .setCustomAnimations(R.anim.frag_in,0,0,R.anim.frag_out)
                         .add(R.id.rl3,registerFrag,"registerFrag")
                         .hide(loginFrag)
-                        .hide(modifyFrag)
+                        .hide(forgotFrag)
                         .show(registerFrag)
                         .addToBackStack(null)
                         .commit();

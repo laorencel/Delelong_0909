@@ -53,7 +53,7 @@ public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearc
         tv_company = (TextView) findViewById(R.id.tv_company);
 
         lv_address = (ListView) findViewById(R.id.lv_address);
-
+        lv_address.setDivider(getResources().getDrawable(R.color.listViewDivider));
         //设置不同的提示语
         intentValue = getIntent().getStringExtra("choose");
         city = getIntent().getStringExtra("com/delelong/diandian/city");
@@ -207,7 +207,6 @@ class MyAddressAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         PoiItem item = poiItems.get(position);
-
 
         ViewHolder holder = null;
         if (convertView == null) {

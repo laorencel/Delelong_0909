@@ -4,9 +4,30 @@
     android:layout_height="match_parent"
     android:background="#eaeaea"
     android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="#ffff"
+        android:layout_marginBottom="1dp">
+
+        <ImageButton
+            android:id="@+id/arrow_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/back_arrow" />
+
+        <TextView
+            android:id="@+id/tv_bar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="20sp"
+            android:text="设置" />
+    </RelativeLayout>
 
     <Button
-        android:id="@+id/tv_countAndSafety"
+        android:id="@+id/btn_modifyPwd"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,10 +35,10 @@
         android:background="@drawable/bg_text_custome"
         android:gravity="center_vertical"
         android:padding="15dp"
-        android:text="账号与安全" />
+        android:text="修改密码" />
 
     <Button
-        android:id="@+id/tv_commonAddress"
+        android:id="@+id/btn_commonAddress"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,57 +50,46 @@
         android:text="常用地址" />
 
     <Button
-        android:id="@+id/tv_emergencyPerson"
+        android:id="@+id/btn_remindMode"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_text_custome"
         android:gravity="center_vertical"
         android:padding="15dp"
-        android:text="紧急联系人" />
+        android:text="提醒模式" />
 
     <Button
-        android:id="@+id/tv_userGuide"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/bg_text_custome"
-        android:gravity="center_vertical"
-        android:padding="15dp"
-        android:text="用户指南" />
-
-    <Button
-        android:id="@+id/tv_versionUpdate"
+        android:id="@+id/btn_clause"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0.5dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/bg_text_custome"
-        android:gravity="center_vertical"
-        android:padding="15dp"
-        android:text="版本更新" />
-
-    <Button
-        android:id="@+id/tv_clause"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="0.5dp"
         android:background="@drawable/bg_text_custome"
         android:gravity="center_vertical"
         android:padding="15dp"
         android:text="法律条款" />
 
     <Button
-        android:id="@+id/tv_about"
+        android:id="@+id/btn_versionUpdate"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0.5dp"
+        android:background="@drawable/bg_text_custome"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="版本更新" />
+
+    <Button
+        android:id="@+id/btn_aboutUs"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_text_custome"
         android:gravity="center_vertical"
         android:padding="15dp"
-        android:text="关于" />
+        android:text="关于我们" />
 
 </LinearLayout>

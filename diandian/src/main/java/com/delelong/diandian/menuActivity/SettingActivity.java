@@ -1,44 +1,89 @@
 package com.delelong.diandian.menuActivity;
 
-import android.os.Build;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.delelong.diandian.BaseActivity;
 import com.delelong.diandian.R;
+import com.delelong.diandian.fragment.ForgotFrag;
 
 /**
  * Created by Administrator on 2016/9/6.
  */
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
-    ActionBar actionBar;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActionBar();
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_setting);
-
+        initActionBar();
+        initView();
+        initFragment();
+    }
+    FragmentManager fragmentManager;
+    ForgotFrag forgotFrag;
+    private void initFragment() {
+        fragmentManager = getFragmentManager();
+        forgotFrag = new ForgotFrag();
     }
 
+    Button btn_modifyPwd;
+    Button btn_commonAddress,btn_remindMode;
+    Button btn_clause,btn_versionUpdate,btn_aboutUs;
+    private void initView() {
+        btn_modifyPwd = (Button) findViewById(R.id.btn_modifyPwd);
+
+        btn_commonAddress = (Button) findViewById(R.id.btn_commonAddress);
+        btn_remindMode = (Button) findViewById(R.id.btn_remindMode);
+
+        btn_clause = (Button) findViewById(R.id.btn_clause);
+        btn_versionUpdate = (Button) findViewById(R.id.btn_versionUpdate);
+        btn_aboutUs = (Button) findViewById(R.id.btn_aboutUs);
+
+        btn_modifyPwd.setOnClickListener(this);
+        btn_commonAddress.setOnClickListener(this);
+        btn_remindMode.setOnClickListener(this);
+        btn_clause.setOnClickListener(this);
+        btn_versionUpdate.setOnClickListener(this);
+        btn_aboutUs.setOnClickListener(this);
+    }
+
+    ImageButton arrow_back;
     private void initActionBar() {
-        actionBar = getSupportActionBar();
-        if (Build.VERSION.SDK_INT >= 21) {
-            //用于去除阴影
-            actionBar.setElevation(0);
-        }
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        arrow_back = (ImageButton) findViewById(R.id.arrow_back);
+        arrow_back.setOnClickListener(this);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:// 点击返回图标事件
-                this.finish();
-            default:
-                return super.onOptionsItemSelected(item);
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.arrow_back:
+                finish();
+                break;
+            case R.id.btn_modifyPwd:
+                finish();
+                break;
+            case R.id.btn_commonAddress:
+                finish();
+                break;
+            case R.id.btn_remindMode:
+                finish();
+                break;
+            case R.id.btn_clause:
+                finish();
+                break;
+            case R.id.btn_versionUpdate:
+                finish();
+                break;
+            case R.id.btn_aboutUs:
+                finish();
+                break;
         }
+
     }
 }

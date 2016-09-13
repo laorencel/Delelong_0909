@@ -3,6 +3,7 @@ package com.delelong.diandian;
 import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -231,7 +232,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
     private OnLocationChangedListener mListener;
-    private BitmapDescriptor myLocationIcon;
     private float mCurrentX;
     private MyOrientationListener myOrientationListener;
 
@@ -255,17 +255,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mUiSettings.setScaleControlsEnabled(false);//设置比例尺功能是否可用
 
         //改写箭头样式
-        myLocationStyle = new MyLocationStyle();
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked1));
-        myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
-        myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
-        aMap.setMyLocationStyle(myLocationStyle);
+//        myLocationStyle = new MyLocationStyle();
+//        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked1));
+//        myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
+//        myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
+//        aMap.setMyLocationStyle(myLocationStyle);
 
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
         aMap.setLocationSource(this);// 设置定位监听
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
 
-//        myLocationIcon = BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked1);
         //设置方向监听
         myOrientationListener = new MyOrientationListener(context);
         myOrientationListener.setmOnOritationListener(new MyOrientationListener.OnOritationListener() {
@@ -342,16 +341,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         orderedMode = "拼车";
     }
 
+    boolean isLogining = true;
+    /**
+     * 设置登陆状态
+     * @param isLogining
+     */
+    public void setLogining(boolean isLogining){
+        this.isLogining = isLogining;
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_actionbar:
                 //调出侧边栏
+                toLogin();
                 if (menuFrag == null) {
                     menuFrag = new MenuFrag();
                     mFragManager.beginTransaction().add(R.id.rl_menuFrag, menuFrag, "menuFrag").addToBackStack(null).show(menuFrag).commit();
                 } else {
-                    mFragManager.beginTransaction().show(menuFrag).commit();
+                    //退回栈后fragment重新添加
+                    mFragManager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.rl_menuFrag, menuFrag, "menuFrag").addToBackStack(null).show(menuFrag).commit();
                 }
                 isForeground = false;
                 actionBar.hide();
@@ -406,6 +415,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     ToastUtil.show(context, "请先设置起始点");
                     return;
                 }
+                toLogin();
                 final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
                         mPositionPoiItem.getLatLonPoint(), mDestinationPoiItem.getLatLonPoint());
                 // 第一个参数表示路径规划的起点和终点，第二个参数表示驾车模式，第三个参数表示途经点，第四个参数表示避让区域，第五个参数表示避让道路
@@ -415,6 +425,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mRouteSearch.calculateDriveRouteAsyn(query);// 异步路径规划驾车模式查询
                 break;
         }
+    }
+
+    /**
+     * 判断不在登陆状态，先登陆
+     * 需修改成dialog形式
+     */
+    private void toLogin() {
+        if (!isLogining){
+            Toast.makeText(MainActivity.this, "请先登陆", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this,LoginActivity.class));
+            finish();
+        };
     }
 
     PoiItem mPositionPoiItem;//起点poi
@@ -591,7 +613,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mMapView.onResume();
         mLocationClient.startLocation();
         aMap.setMyLocationEnabled(true);
-        aMap.setMyLocationStyle(myLocationStyle);
+//        aMap.setMyLocationStyle(myLocationStyle);
         isForeground = true;
     }
 
@@ -630,6 +652,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     return false;
                 }
             }else {
+                if (!actionBar.isShowing()){
+                    //从fragment退回，显示actionbar
+                    actionBar.show();
+                }
                 return super.onKeyDown(keyCode, event);
             }
         }

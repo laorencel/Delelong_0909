@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.delelong.diandian.BaseActivity;
 import com.delelong.diandian.R;
 import com.delelong.diandian.bean.Client;
+import com.delelong.diandian.view.RoundImageView;
 
 /**
  * Created by Administrator on 2016/9/7.
@@ -29,12 +29,14 @@ public class MenuInfoActivity extends BaseActivity implements View.OnClickListen
         initMsg();
     }
 
-    ImageView img_head;
+    RoundImageView img_head;
     TextView tv_nick_name,tv_signature;
     TextView tv_certification_detail,tv_owner_detail;
 
     private void initView() {
-        img_head = (ImageView) findViewById(R.id.img_head);
+        img_head = (RoundImageView) findViewById(R.id.img_head);
+        img_head.setType(RoundImageView.TYPE_CIRCLE);
+
         tv_nick_name = (TextView) findViewById(R.id.tv_nick_name);
         tv_signature = (TextView) findViewById(R.id.tv_signature);
         tv_certification_detail = (TextView) findViewById(R.id.tv_certification_detail);
@@ -43,7 +45,12 @@ public class MenuInfoActivity extends BaseActivity implements View.OnClickListen
 
     Client client;
     private void initMsg() {
-        client = getClientByGET(URL_MEMBER);
+        Bundle bundle = getIntent().getBundleExtra("bundle");
+        client = (Client) bundle.getSerializable("client");//从上级activity获取
+        if (client == null){
+            client = getClientByGET(URL_MEMBER);
+        }
+
         int level = client.getLevel();
         String phone = client.getPhone();
 //        String post_code = client.getPost_code();
@@ -94,7 +101,7 @@ public class MenuInfoActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.tv_modifyInfo:
                 Bundle bundle = getIntent().getBundleExtra("bundle");
-                bundle.putSerializable("Client",client);
+                bundle.putSerializable("client",client);
                 intentActivityWithBundle(this,MenuModifyInfoActivity.class,bundle);
                 break;
         }
