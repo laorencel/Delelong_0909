@@ -13,7 +13,7 @@ public class MyAMapLocation  implements Serializable {
     private String province;
     private String city;
     private String district;
-    private String postCode;
+    private String adCode;
     private String address;
 
     public String getAddress() {
@@ -37,7 +37,7 @@ public class MyAMapLocation  implements Serializable {
         this.province = province;
         this.city = city;
         this.district = district;
-        this.postCode = postCode;
+        this.adCode = postCode;
         this.address = address;
     }
     public MyAMapLocation() {
@@ -80,12 +80,12 @@ public class MyAMapLocation  implements Serializable {
         this.district = district;
     }
 
-    public String getPostCode() {
-        return postCode;
+    public String getAdCode() {
+        return adCode;
     }
 
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
+    public void setAdCode(String adCode) {
+        this.adCode = adCode;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class MyAMapLocation  implements Serializable {
                 ", province='" + province + '\'' +
                 ", com.delelong.diandian.city='" + city + '\'' +
                 ", district='" + district + '\'' +
-                ", postCode='" + postCode + '\'' +
+                ", adCode='" + adCode + '\'' +
                 ", address='" + address + '\'' +
                 '}';
     }

@@ -21,7 +21,14 @@ public class MyOrientationListener implements SensorEventListener {
         mContext = context;
     }
 
+    private boolean isStarted;
+    public boolean isStarted(){
+        return isStarted;
+    }
     public void start(){
+        if (isStarted()){
+            return;
+        }
         mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
         if (mSensorManager != null){
             //获得方向传感器
@@ -30,9 +37,11 @@ public class MyOrientationListener implements SensorEventListener {
         if (mSensor != null){
             mSensorManager.registerListener(this,mSensor,SensorManager.SENSOR_DELAY_UI);
         }
+        isStarted = true;
     }
     public void stop(){
         mSensorManager.unregisterListener(this);
+        isStarted = false;
     }
 
     @Override

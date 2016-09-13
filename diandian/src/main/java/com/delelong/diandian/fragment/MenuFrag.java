@@ -80,14 +80,7 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
         switch (v.getId()) {
             case R.id.img_head:
                 //编辑个人信息页面
-                Bundle bundle = new Bundle();
-                if (activity.myAMapLocation != null) {
-                    bundle.putSerializable("myAMapLocation", activity.myAMapLocation);//传递我的位置
-                }
-                if (client != null) {
-                    bundle.putSerializable("client", client);
-                }
-                activity.intentActivityWithBundle(activity, MenuInfoActivity.class, bundle);
+                startActivityWithBundle(MenuInfoActivity.class);
                 break;
             case R.id.ly_back:
                 hideMenu();//隐藏本菜单界面
@@ -100,6 +93,22 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
                 }
                 break;
         }
+    }
+
+    /**
+     *
+     * @param tClass 目标Class
+     * @param <T>
+     */
+    private <T> void startActivityWithBundle(Class<T> tClass) {
+        Bundle bundle = new Bundle();
+        if (activity.myAMapLocation != null) {
+            bundle.putSerializable("myAMapLocation", activity.myAMapLocation);//传递我的位置
+        }
+        if (client != null) {
+            bundle.putSerializable("client", client);
+        }
+        activity.intentActivityWithBundle(activity, tClass, bundle);
     }
 
     @Override
@@ -116,7 +125,7 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
 
                         break;
                     case 2://问题反馈
-                        activity.startActivity(new Intent(activity, FeedBackActivity.class));
+                        startActivityWithBundle(FeedBackActivity.class);
                         break;
                     case 3://推荐有奖
 
@@ -131,14 +140,7 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
 
                         break;
                     case 7://设    置
-                        Bundle bundle = new Bundle();
-                        if (activity.myAMapLocation != null) {
-                            bundle.putSerializable("myAMapLocation", activity.myAMapLocation);//传递我的位置
-                        }
-                        if (client != null) {
-                            bundle.putSerializable("client", client);
-                        }
-                        activity.intentActivityWithBundle(activity, SettingActivity.class, bundle);
+                        startActivityWithBundle(SettingActivity.class);
                         break;
                 }
                 break;

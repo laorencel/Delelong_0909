@@ -19,10 +19,12 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocationClient;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.model.LatLng;
 import com.delelong.diandian.bean.Client;
+import com.delelong.diandian.listener.MyOrientationListener;
 import com.delelong.diandian.utils.ToastUtil;
 import com.google.common.primitives.Ints;
 
@@ -609,7 +611,17 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 定位到我的位置
      */
-    public void centerToMyLocation(AMap aMap, double myLatitude, double myLongitude) {
+    public void centerToMyLocation(AMap aMap, AMapLocationClient mLocationClient, MyOrientationListener myOrientationListener,double myLatitude, double myLongitude) {
+        if (myOrientationListener != null){
+            if(!myOrientationListener.isStarted()){
+                myOrientationListener.start();
+            }
+        }
+        if (mLocationClient != null){
+            if (!mLocationClient.isStarted()){
+                mLocationClient.startLocation();
+            }
+        }
         aMap.animateCamera(CameraUpdateFactory.changeLatLng(new LatLng(
                 myLatitude, myLongitude)));
     }

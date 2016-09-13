@@ -62,6 +62,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         initActionBar();
         setContentView(R.layout.activity_main);
+        isFirstIn = true;
         setUpMap(savedInstanceState);
         initView();
         setMyCameraChangeListenerListener();
@@ -302,14 +303,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                 //首次进入定位到我的位置
                 if (isFirstIn) {
-                    centerToMyLocation(aMap, myLatitude, myLongitude);
+                    centerToMyLocation(aMap, mLocationClient, myOrientationListener, myLatitude, myLongitude);
                     myPosition.setText(aMapLocation.getPoiName());
 //                    client.setStartLatitude(myLatitude);
 //                    client.setStartLongitude(myLongitude);
                     isFirstIn = false;
                 }
-                myAMapLocation = new MyAMapLocation(aMapLocation.getCountry(),aMapLocation.getProvince(),
-                        aMapLocation.getCity(),aMapLocation.getDistrict(),aMapLocation.getAddress(),aMapLocation.getAdCode());
+                myAMapLocation = new MyAMapLocation(aMapLocation.getCountry(), aMapLocation.getProvince(),
+                        aMapLocation.getCity(), aMapLocation.getDistrict(), aMapLocation.getAddress(), aMapLocation.getAdCode());
 
             } else {
                 String errText = "定位失败," + aMapLocation.getErrorCode() + ": " + aMapLocation.getErrorInfo();
@@ -342,13 +343,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     boolean isLogining = true;
+
     /**
      * 设置登陆状态
+     *
      * @param isLogining
      */
-    public void setLogining(boolean isLogining){
+    public void setLogining(boolean isLogining) {
         this.isLogining = isLogining;
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -368,7 +372,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.myLocation:
                 //定位到我的位置
-                centerToMyLocation(aMap, myLatitude, myLongitude);
+                centerToMyLocation(aMap, mLocationClient, myOrientationListener, myLatitude, myLongitude);
                 break;
             case R.id.showTime:
                 lyOfTime.setVisibility(View.VISIBLE);
@@ -416,13 +420,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     return;
                 }
                 toLogin();
+
                 final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
                         mPositionPoiItem.getLatLonPoint(), mDestinationPoiItem.getLatLonPoint());
                 // 第一个参数表示路径规划的起点和终点，第二个参数表示驾车模式，第三个参数表示途经点，第四个参数表示避让区域，第五个参数表示避让道路
 //                List<LatLonPoint> passedByPoints = new ArrayList<>();
 //                passedByPoints.add(new LatLonPoint(mPositionPoiItem.getLatLonPoint().getLatitude(), mPositionPoiItem.getLatLonPoint().getLongitude()));
-                RouteSearch.DriveRouteQuery query = new RouteSearch.DriveRouteQuery(fromAndTo, RouteSearch.DrivingDefault, null, null, "");
-                mRouteSearch.calculateDriveRouteAsyn(query);// 异步路径规划驾车模式查询
+                RouteSearch.DriveRouteQuery routeQuery = new RouteSearch.DriveRouteQuery(fromAndTo, RouteSearch.DrivingDefault, null, null, "");
+                mRouteSearch.calculateDriveRouteAsyn(routeQuery);// 异步路径规划驾车模式查询
                 break;
         }
     }
@@ -432,11 +437,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      * 需修改成dialog形式
      */
     private void toLogin() {
-        if (!isLogining){
+        if (!isLogining) {
             Toast.makeText(MainActivity.this, "请先登陆", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(MainActivity.this,LoginActivity.class));
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
-        };
+        }
+        ;
     }
 
     PoiItem mPositionPoiItem;//起点poi
@@ -470,7 +476,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     //终点坐标
                     double desLatitude = mDestinationPoiItem.getLatLonPoint().getLatitude();
                     double desLongitude = mDestinationPoiItem.getLatLonPoint().getLongitude();
-                    centerToMyLocation(aMap, desLatitude, desLongitude);
+                    centerToMyLocation(aMap, mLocationClient, myOrientationListener, desLatitude, desLongitude);
 
 //                    client.setEndLatitude(desLatitude);
 //                    client.setEndLongitude(desLongitude);
@@ -540,9 +546,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             //设置为高精度定位模式
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-            aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
             mLocationOption.setInterval(2000);
             mLocationClient.setLocationOption(mLocationOption);
+            aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
 
             mLocationClient.startLocation();
         }
@@ -563,14 +569,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onStart() {
         super.onStart();
-        //开启定位
-        if (aMap != null) {
-            aMap.setMyLocationEnabled(true);
-            mLocationClient.startLocation();
-            if (!mLocationClient.isStarted()) {
+        //首次进入开启定位，以后返回界面可以由centerToMyLocation重新开启定位
+        if (isFirstIn) {
+            if (aMap != null) {
+                aMap.setMyLocationEnabled(true);
                 mLocationClient.startLocation();
-                //开启方向传感器
-                myOrientationListener.start();
+                if (!mLocationClient.isStarted()) {
+                    mLocationClient.startLocation();
+                    //开启方向传感器
+                    myOrientationListener.start();
+                }
             }
         }
     }
@@ -610,8 +618,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onResume() {
         super.onResume();
         mMapView.onResume();
-        mLocationClient.startLocation();
-        aMap.setMyLocationEnabled(true);
+//        mLocationClient.startLocation();
+//        aMap.setMyLocationEnabled(true);
 //        aMap.setMyLocationStyle(myLocationStyle);
     }
 
@@ -627,7 +635,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (isForeground){
+            if (isForeground) {
                 //处于可见状态
                 if (isTwice) {
                     isTwice = !isTwice;
@@ -649,12 +657,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     }, 3000);
                     return false;
                 }
-            }else {
-                if (!actionBar.isShowing()){
+            } else {
+                if (!actionBar.isShowing()) {
                     //从fragment退回，显示actionbar
                     actionBar.show();
                 }
-                if (!myPosition.isEnabled()){
+                if (!myPosition.isEnabled()) {
                     enableClick();
                 }
                 isForeground = !isForeground;
