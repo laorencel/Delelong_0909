@@ -9,6 +9,8 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+import com.delelong.diandian.http.HttpUtils;
+
 import java.util.List;
 
 /**
@@ -57,7 +59,9 @@ public class StartActivity extends BaseActivity {
         } else {
             phone = preferences.getString("phone", null);
             pwd = preferences.getString("pwd", null);
-            List<String> loginResult = loginApp(URL_LOGIN, phone, pwd);
+//            List<String> loginResult = loginApp(URL_LOGIN, phone, pwd);
+            HttpUtils httpUtils = new HttpUtils(this);
+            List<String> loginResult = httpUtils.login(URL_LOGIN, phone, pwd);
 
             if (loginResult.get(0).equalsIgnoreCase("OK")){
                 startActivity(new Intent(this, MainActivity.class));

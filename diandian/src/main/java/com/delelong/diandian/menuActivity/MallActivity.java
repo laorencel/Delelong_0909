@@ -12,13 +12,14 @@ import android.widget.ProgressBar;
 
 import com.delelong.diandian.BaseActivity;
 import com.delelong.diandian.R;
+import com.delelong.diandian.bean.Str;
 
 /**
  * Created by Administrator on 2016/9/12.
  */
 public class MallActivity extends BaseActivity {
 
-    private static final String URL_LIANCHENG = "http://www.52liancheng.com";
+
     private static final String TAG = "BAIDUMAPFORTEST";
     WebView webView;
     ProgressBar progressBar;
@@ -39,7 +40,7 @@ public class MallActivity extends BaseActivity {
 
     private void setUpWeb() {
 
-        webView.loadUrl(URL_LIANCHENG);
+        webView.loadUrl(Str.URL_LIANCHENG);
         //设置使用webview打开网页,而不是使用默认浏览器打开
         webView.setWebViewClient(new WebViewClient() {
             @Override

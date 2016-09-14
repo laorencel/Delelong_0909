@@ -50,6 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <TextView
@@ -57,7 +58,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="合肥市政府"
                 android:textColor="#72b74d"
                 android:textSize="15sp" />
 
@@ -66,7 +66,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="合肥市淮河路步行街589号左边向西100米"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
@@ -94,6 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <TextView
@@ -101,7 +101,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="百乐门"
                 android:textColor="#e44496"
                 android:textSize="15sp" />
 
@@ -110,7 +109,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="合肥市淮河路步行街589号左边向西100米"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>

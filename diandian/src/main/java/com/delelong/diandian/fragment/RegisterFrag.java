@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.delelong.diandian.LoginActivity;
 import com.delelong.diandian.R;
+import com.delelong.diandian.bean.Str;
+import com.delelong.diandian.http.HttpUtils;
 import com.delelong.diandian.utils.MD5;
 
 import java.util.List;
@@ -24,10 +26,6 @@ import java.util.List;
  * Created by Administrator on 2016/8/19.
  */
 public class RegisterFrag extends Fragment implements View.OnClickListener {
-    private static final String URL_REGISTER = "http://121.40.142.141:8090/Jfinal/api/register";
-    private static final String URL_SMSCODE = "http://121.40.142.141:8090/Jfinal/api/smscode";
-    //验证码类型(1:注册;2:忘记密码;3:更换手机号;)
-    private static final String TYPE_REGISTER = "1";
     View view;
 
     @Nullable
@@ -110,15 +108,17 @@ public class RegisterFrag extends Fragment implements View.OnClickListener {
                     Toast.makeText(activity, "请填写手机号", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                resultForReg = activity.registerApp(URL_REGISTER, phone, verificationCode, pwd, rePwd);
+                HttpUtils httpUtils = new HttpUtils(activity);
+//                resultForReg = activity.registerApp(URL_REGISTER, phone, verificationCode, pwd, rePwd);
+                resultForReg = httpUtils.registerApp(Str.URL_REGISTER, phone, verificationCode, pwd, rePwd);
                 if (resultForReg.get(0).equals("FAILURE")) {
-                    resultForReg = activity.registerApp(URL_REGISTER, phone, verificationCode, pwd, rePwd);
+                    resultForReg = httpUtils.registerApp(Str.URL_REGISTER, phone, verificationCode, pwd, rePwd);
                     if (resultForReg.get(0).equals("FAILURE")) {
                         Toast.makeText(activity, "注册失败"+resultForReg.get(1), Toast.LENGTH_SHORT).show();
                         return;
                     }
                 } else if (resultForReg.get(0).equals("ERROR")) {
-                    resultForReg = activity.registerApp(URL_REGISTER, phone, verificationCode, pwd, rePwd);
+                    resultForReg = httpUtils.registerApp(Str.URL_REGISTER, phone, verificationCode, pwd, rePwd);
                     if (resultForReg.get(0).equals("ERROR")) {
                         Toast.makeText(activity, "注册错误"+resultForReg.get(1), Toast.LENGTH_SHORT).show();
                         return;
@@ -155,7 +155,8 @@ public class RegisterFrag extends Fragment implements View.OnClickListener {
         @Override
         public void run() {
             //type:(1:注册;2:忘记密码;3:更换手机号;)
-            resultForVerific = activity.getHttpResultForVerification(URL_SMSCODE, phone, TYPE_REGISTER);
+            HttpUtils httpUtils = new HttpUtils(activity);
+            resultForVerific = httpUtils.getVerification(Str.URL_SMSCODE, phone, Str.VERIFICATION_TYPE_REGISTER);
         }
     }
 

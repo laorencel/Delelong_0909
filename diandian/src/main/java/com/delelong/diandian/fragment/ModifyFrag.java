@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.delelong.diandian.LoginActivity;
 import com.delelong.diandian.R;
+import com.delelong.diandian.bean.Str;
+import com.delelong.diandian.http.HttpUtils;
 import com.delelong.diandian.utils.MD5;
 
 import java.util.List;
@@ -27,7 +29,6 @@ import java.util.List;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ModifyFrag extends Fragment implements View.OnClickListener {
-    public static final String URL_MODIFY = "http://121.40.142.141:8090/Jfinal/api/update/password";
     View view;
 
     @Nullable
@@ -90,15 +91,17 @@ public class ModifyFrag extends Fragment implements View.OnClickListener {
                     Toast.makeText(activity, "请确认密码一致", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                resultForMod = activity.modifyPwd(URL_MODIFY, pwd, newPwd, rePwd);
+                HttpUtils httpUtils = new HttpUtils(activity);
+//                resultForMod = activity.modifyPwd(URL_MODIFY, pwd, newPwd, rePwd);
+                resultForMod = httpUtils.modifyPwd(Str.URL_MODIFY, pwd, newPwd, rePwd);
                 if (resultForMod.get(0).equals("FAILURE")) {
-                    resultForMod = activity.modifyPwd(URL_MODIFY, pwd, newPwd, rePwd);
+                    resultForMod = httpUtils.modifyPwd(Str.URL_MODIFY, pwd, newPwd, rePwd);
                     if (resultForMod.get(0).equals("FAILURE")) {
                         Toast.makeText(activity, "修改失败，请稍后重试", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 } else if (resultForMod.get(0).equals("ERROR")) {
-                    resultForMod = activity.modifyPwd(URL_MODIFY, pwd, newPwd, rePwd);
+                    resultForMod = httpUtils.modifyPwd(Str.URL_MODIFY, pwd, newPwd, rePwd);
                     if (resultForMod.get(0).equals("ERROR")) {
                         Toast.makeText(activity, "修改错误，请稍后重试", Toast.LENGTH_SHORT).show();
                         return;

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -19,6 +18,8 @@ import android.widget.Toast;
 import com.delelong.diandian.BaseActivity;
 import com.delelong.diandian.R;
 import com.delelong.diandian.bean.Client;
+import com.delelong.diandian.bean.Str;
+import com.delelong.diandian.http.HttpUtils;
 import com.delelong.diandian.numberPicker.ChooseCityInterface;
 import com.delelong.diandian.numberPicker.ChooseCityUtil;
 import com.delelong.diandian.pace.MyAMapLocation;
@@ -34,14 +35,8 @@ import java.util.Locale;
  */
 public class MenuModifyInfoActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final String URL_MEMBER = "http://121.40.142.141:8090/Jfinal/api/member";//获取会员信息
-    private static final String URL_UPDATECLIENT = "http://121.40.142.141:8090/Jfinal/api/member/update";//更新会员信息（GET）
-    private static final String URL_UPDATEFILE = "http://121.40.142.141:8090/Jfinal/file";//上传文件
-    private static final String URL_HEAD_PORTRAIT = "http://121.40.142.141:8090/Jfinal/";//图片头地址
     private static final String TAG = "BAIDUMAPFORTEST";
-    private static final String FILEPATH = "/sdcard/DianDian/Image/";//文件本地地址
-    private static final int REQUESTCODECAMERA = 1;
-    private static final int REQUESTCODEALBUM = 2;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,9 +106,11 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
                 break;
             case R.id.tv_modify:
 //              提交信息到服务器
-                //头像地址？？？
-                getClientForUpDate();
-                List<String> result = upDateClient(URL_UPDATECLIENT, client);
+                getClientForUpDate(httpUtils);
+                if (client == null) client = httpUtils.getClientByGET(Str.URL_MEMBER);
+                if (httpUtils == null) httpUtils = new HttpUtils(this);
+
+                List<String> result = httpUtils.upDateClient(Str.URL_UPDATECLIENT, client);
                 if (result.get(0).equalsIgnoreCase("OK")) {
                     Toast.makeText(MenuModifyInfoActivity.this, "更新成功", Toast.LENGTH_SHORT).show();
                     finish();
@@ -131,14 +128,14 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
                 break;
             case R.id.dialog_camera:
                 Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intentCamera, REQUESTCODECAMERA);
+                startActivityForResult(intentCamera, Str.REQUESTCODECAMERA);
                 myCameraDialog.hide();
                 break;
             case R.id.dialog_album:
                 //调用相册
                 Intent intentAlbum = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intentAlbum, REQUESTCODEALBUM);
+                startActivityForResult(intentAlbum, Str.REQUESTCODEALBUM);
                 myCameraDialog.hide();
                 break;
             case R.id.dialog_cancel:
@@ -159,18 +156,18 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
         if (resultCode == Activity.RESULT_OK && data != null) {
             String fileName = new DateFormat().format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".jpg";
             Bitmap bitmap = null;
-            if (requestCode == REQUESTCODECAMERA) {
+            if (requestCode == Str.REQUESTCODECAMERA) {
                 //拍照
                 bitmap = getCamera(data, bitmap);
-            } else if (requestCode == REQUESTCODEALBUM) {
+            } else if (requestCode == Str.REQUESTCODEALBUM) {
                 //相册（自带拍照）
                 bitmap = getAlbum(data, bitmap);
             }
             img_head.setImageBitmap(bitmap);// 将图片显示在ImageView里
             //保存图片到手机
-            File file = new File(FILEPATH);
+            File file = new File(Str.FILEPATH);
             file.mkdirs();// 创建文件夹
-            headPath = createImage(FILEPATH, fileName, bitmap);
+            headPath = createImage(Str.FILEPATH, fileName, bitmap);
         }
     }
 
@@ -186,9 +183,15 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
         dialog_cancel.setOnClickListener(this);
     }
 
-    private void getClientForUpDate() {
-        //上传头像文件
-        List<String> headImage = upDateFile(URL_UPDATEFILE, headPath);
+    private void getClientForUpDate(HttpUtils httpUtils) {
+        if (client == null) {
+            client = httpUtils.getClientByGET(Str.URL_MEMBER);
+        }
+        if (headPath !=null){
+            //上传头像文件
+            List<String> headImage = httpUtils.upDateFile(Str.URL_UPDATEFILE, headPath);
+            client.setHead_portrait(headImage.get(2));
+        }
 
         String nickName = edt_nickName.getText().toString();
         int gender = edt_gender.getText().toString().equals("男") ? 1 : 2;
@@ -203,10 +206,6 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
         String address = edt_address.getText().toString();
         String postCode = edt_postCode.getText().toString();
 
-        if (client == null) {
-            client = new Client();
-        }
-        client.setHead_portrait(headImage.get(2));
         client.setNick_name(nickName);
         client.setGender(gender);
         client.setEmail(email);
@@ -236,7 +235,7 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
 
     Client client;
     MyAMapLocation myAMapLocation;
-
+    HttpUtils httpUtils;
     private void initMsg() {
         Bundle bundle = getIntent().getBundleExtra("bundle");
         myAMapLocation = (MyAMapLocation) bundle.getSerializable("myAMapLocation");
@@ -247,12 +246,11 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
         address_bundle = myAMapLocation.getAddress();
         postCode_bundle = myAMapLocation.getAdCode();
 
-//        client = getClientByGET(URL_MEMBER);//从服务器获取
+        httpUtils = new HttpUtils(this);
         client = (Client) bundle.getSerializable("client");//从上级activity获取
         if (client == null){
-            client = getClientByGET(URL_MEMBER);
+            client = httpUtils.getClientByGET(Str.URL_MEMBER);
         }
-        Log.i(TAG, "initMsg: " + client);
         int level = client.getLevel();
         String phone = client.getPhone();
         String post_code = client.getPost_code();
@@ -271,7 +269,7 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
         String real_name = client.getReal_name();
 
         MyHeadTask myHeadTask = new MyHeadTask(img_head);
-        myHeadTask.execute(URL_HEAD_PORTRAIT, head_portrait);
+        myHeadTask.execute(Str.URL_HEAD_PORTRAIT, head_portrait);
         edt_nickName.setText(nick_name);
         edt_gender.setText(gender == 1 ? "男" : "女");
         edt_email.setText(email);

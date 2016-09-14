@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.delelong.diandian.LoginActivity;
 import com.delelong.diandian.MainActivity;
 import com.delelong.diandian.R;
+import com.delelong.diandian.bean.Str;
+import com.delelong.diandian.http.HttpUtils;
 import com.delelong.diandian.utils.MD5;
 
 import java.util.List;
@@ -32,7 +34,6 @@ import java.util.List;
 public class LoginFrag extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "BAIDUMAPFORTEST";
-    private static final String URL_LOGIN = "http://121.40.142.141:8090/Jfinal/api/login";
     View view;
 
     @Nullable
@@ -97,7 +98,9 @@ public class LoginFrag extends Fragment implements View.OnClickListener {
                 Toast.makeText(activity, "号码或密码长度不够", Toast.LENGTH_SHORT).show();
                 return;
             } else {
-                List<String> result = activity.loginApp(URL_LOGIN, phone, pwd);
+                HttpUtils httpUtils = new HttpUtils(activity);
+//                List<String> result = activity.loginApp(URL_LOGIN, phone, pwd);
+                List<String> result = httpUtils.login(Str.URL_LOGIN, phone, pwd);
                 if (result.get(0).equals("OK")) {
                     LoginActivity finish = (LoginActivity) getActivity();
                     startActivity(new Intent(getActivity(), MainActivity.class));

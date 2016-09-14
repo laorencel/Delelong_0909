@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.delelong.diandian">
+    <supports-screens
+        android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="true"
+        android:resizeable="true"
+        android:anyDensity="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -25,7 +31,9 @@
         <activity android:name=".MainActivity">
         </activity>
         <activity android:name=".ChoosePosition"></activity>
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity">
+
+        </activity>
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

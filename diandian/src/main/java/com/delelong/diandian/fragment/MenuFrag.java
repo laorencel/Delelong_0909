@@ -26,6 +26,8 @@ import com.delelong.diandian.R;
 import com.delelong.diandian.adapter.MyMenuLvAdapter;
 import com.delelong.diandian.bean.Client;
 import com.delelong.diandian.bean.MenuListItem;
+import com.delelong.diandian.bean.Str;
+import com.delelong.diandian.http.HttpUtils;
 import com.delelong.diandian.menuActivity.FeedBackActivity;
 import com.delelong.diandian.menuActivity.MallActivity;
 import com.delelong.diandian.menuActivity.MenuInfoActivity;
@@ -40,9 +42,6 @@ import java.util.List;
  */
 public class MenuFrag extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
 
-    private static final String URL_MEMBER = "http://121.40.142.141:8090/Jfinal/api/member";//获取会员信息
-    private static final String URL_LOGINOUT = "http://121.40.142.141:8090/Jfinal/api/logout";//注销登陆
-    private static final String URL_HEAD_PORTRAIT = "http://121.40.142.141:8090/Jfinal/";//图片头地址
     private static final String TAG = "BAIDUMAPFORTEST";
 
     View view;
@@ -61,15 +60,20 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
     }
 
     Client client;
-
+    HttpUtils httpUtils;
     private void initClient() {
-        client = activity.getClientByGET(URL_MEMBER);
+        if (activity == null){
+            activity = (MainActivity) getActivity();
+        }
+        httpUtils = new HttpUtils(activity);
+//        client = activity.getClientByGET(URL_MEMBER);
+        client = httpUtils.getClientByGET(Str.URL_MEMBER);
         String phone = client.getPhone();
         String nick_name = client.getNick_name();
         String head_portrait = client.getHead_portrait();
 
         MyHeadTask myHeadTask = new MyHeadTask(img_head);
-        myHeadTask.execute(URL_HEAD_PORTRAIT, head_portrait);
+        myHeadTask.execute(Str.URL_HEAD_PORTRAIT, head_portrait);
         if (!nick_name.isEmpty()) {
             this.nick_name.setText(nick_name);
         }
@@ -86,7 +90,7 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
                 hideMenu();//隐藏本菜单界面
                 break;
             case R.id.btn_loginOut:
-                List<String> loginOutResult = activity.getLoginOutResultByGET(URL_LOGINOUT);
+                List<String> loginOutResult = httpUtils.getLoginOutResultByGET(Str.URL_LOGINOUT);
                 if (loginOutResult.get(0).equalsIgnoreCase("OK")){
                     hideMenu();//隐藏本菜单界面
                     activity.setLogining(false);

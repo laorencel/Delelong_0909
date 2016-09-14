@@ -15,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.delelong.diandian.R;
+import com.delelong.diandian.bean.Str;
+import com.delelong.diandian.http.HttpUtils;
 import com.delelong.diandian.menuActivity.SettingActivity;
 import com.delelong.diandian.utils.MD5;
 
@@ -25,10 +27,6 @@ import java.util.List;
  */
 public class ForgotFrag extends Fragment implements View.OnClickListener{
 
-    private static final String URL_FORGOT = "http://121.40.142.141:8090/Jfinal/api/member/reset/password";
-    private static final String URL_SMSCODE = "http://121.40.142.141:8090/Jfinal/api/smscode";
-    //验证码类型(1:注册;2:忘记密码;3:更换手机号;)
-    private static final String TYPE_RESET = "2";
     View view;
     @Nullable
     @Override
@@ -113,15 +111,17 @@ public class ForgotFrag extends Fragment implements View.OnClickListener{
                     return;
                 }
 
-                resultForReset = activity.resetPwd(URL_FORGOT, phone, verificationCode, pwd, rePwd);
+                HttpUtils httpUtils = new HttpUtils(activity);
+//                resultForReset = activity.resetPwd(URL_FORGOT, phone, verificationCode, pwd, rePwd);
+                resultForReset = httpUtils.resetPwd(Str.URL_FORGOT, phone, verificationCode, pwd, rePwd);
                 if (resultForReset.get(0).equals("FAILURE")) {
-                    resultForReset = activity.resetPwd(URL_FORGOT, phone, verificationCode, pwd, rePwd);
+                    resultForReset = httpUtils.resetPwd(Str.URL_FORGOT, phone, verificationCode, pwd, rePwd);
                     if (resultForReset.get(0).equals("FAILURE")) {
                         Toast.makeText(activity, "修改失败"+resultForReset.get(1), Toast.LENGTH_SHORT).show();
                         return;
                     }
                 } else if (resultForReset.get(0).equals("ERROR")) {
-                    resultForReset = activity.resetPwd(URL_FORGOT, phone, verificationCode, pwd, rePwd);
+                    resultForReset = httpUtils.resetPwd(Str.URL_FORGOT, phone, verificationCode, pwd, rePwd);
                     if (resultForReset.get(0).equals("ERROR")) {
                         Toast.makeText(activity, "修改错误"+resultForReset.get(1), Toast.LENGTH_SHORT).show();
                         return;
@@ -177,7 +177,9 @@ public class ForgotFrag extends Fragment implements View.OnClickListener{
         @Override
         public void run() {
             //type:(1:注册;2:忘记密码;3:更换手机号;)
-            resultForVerific =activity.getHttpResultForVerification(URL_SMSCODE, phone, TYPE_RESET);
+            HttpUtils httpUtils = new HttpUtils(activity);
+//            resultForVerific =activity.getHttpResultForVerification(URL_SMSCODE, phone, TYPE_RESET);
+            resultForVerific =httpUtils.getVerification(Str.URL_SMSCODE, phone, Str.VERIFICATION_TYPE_RESET);
         }
     }
     SettingActivity activity;

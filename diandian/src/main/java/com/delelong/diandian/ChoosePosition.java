@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.delelong.diandian.bean.Str;
 
 import java.util.List;
 
@@ -163,12 +164,6 @@ public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearc
     public void afterTextChanged(Editable s) {
     }
 
-    private static final int RESULTNOCHOICECODE = 0;
-    private static final int RESULTPOSITIONCODE = 1;
-    private static final int RESULTDESTINATIONCODE = 2;
-    private static final int REQUESTHOMECODE = 3;
-    private static final int REQUESTCOMPANYCODE = 4;
-
     /**
      * 点击选择地址，返回地图界面并传值
      *
@@ -188,27 +183,27 @@ public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearc
             intent.putExtra("bundle", bundle)
                     .putExtra("key", "myPosition");
             //返回结果
-            setResult(RESULTPOSITIONCODE, intent);
+            setResult(Str.REQUESTPOSITIONCODE, intent);
             finish();
         } else if (intentValue.equals("myDestination")){
             bundle.putParcelable("PoiInfo", item);
             intent.putExtra("bundle", bundle)
                     .putExtra("key", "myDestination");
-            setResult(RESULTDESTINATIONCODE, intent);
+            setResult(Str.REQUESTDESTINATIONCODE, intent);
             finish();
         }
         else if (intentValue.equals("home")){
             bundle.putParcelable("PoiInfo", item);
             intent.putExtra("bundle", bundle)
                     .putExtra("key", "home");
-            setResult(REQUESTHOMECODE, intent);
+            setResult(Str.REQUESTHOMECODE, intent);
             finish();
         }
         else if (intentValue.equals("company")){
             bundle.putParcelable("PoiInfo", item);
             intent.putExtra("bundle", bundle)
                     .putExtra("key", "company");
-            setResult(REQUESTCOMPANYCODE, intent);
+            setResult(Str.REQUESTCOMPANYCODE, intent);
             finish();
         }
     }
@@ -216,7 +211,7 @@ public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearc
     public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra("key", "noChoice");
-        setResult(RESULTNOCHOICECODE, intent);
+        setResult(Str.RESULTNOCHOICECODE, intent);
         super.onBackPressed();
     }
 
@@ -224,10 +219,10 @@ public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearc
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.tv_home:
-                intentActivityForResult(this, ChoosePosition.class, "choose", "home", city, REQUESTHOMECODE);
+                intentActivityForResult(this, ChoosePosition.class, "choose", "home", city, Str.REQUESTHOMECODE);
                 break;
             case R.id.tv_company:
-                intentActivityForResult(this, ChoosePosition.class, "choose", "company", city, REQUESTCOMPANYCODE);
+                intentActivityForResult(this, ChoosePosition.class, "choose", "company", city, Str.REQUESTCOMPANYCODE);
                 break;
         }
     }
@@ -244,7 +239,7 @@ public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearc
         }
         Bundle bundle = data.getBundleExtra("bundle");
         switch (resultCode) {
-            case REQUESTHOMECODE:
+            case Str.REQUESTHOMECODE:
                 if (value.equals("home")) {
                     mHomePoiItem = bundle.getParcelable("PoiInfo");
                     tv_home.setText(mHomePoiItem.getTitle());
@@ -254,7 +249,7 @@ public class ChoosePosition extends BaseActivity implements PoiSearch.OnPoiSearc
                             .commit();
                 }
                 break;
-            case REQUESTCOMPANYCODE:
+            case Str.REQUESTCOMPANYCODE:
                 if (value.equals("company")) {
                     mCompanyPoiItem = bundle.getParcelable("PoiInfo");
                     tv_company.setText(mCompanyPoiItem.getTitle());

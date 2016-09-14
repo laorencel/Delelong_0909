@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.delelong.diandian.BaseActivity;
 import com.delelong.diandian.R;
 import com.delelong.diandian.bean.Client;
+import com.delelong.diandian.bean.Str;
+import com.delelong.diandian.http.HttpUtils;
 import com.delelong.diandian.view.RoundImageView;
 
 /**
@@ -16,9 +18,7 @@ import com.delelong.diandian.view.RoundImageView;
  */
 public class MenuInfoActivity extends BaseActivity implements View.OnClickListener{
 
-    private static final String URL_MEMBER = "http://121.40.142.141:8090/Jfinal/api/member";//获取会员信息
-    private static final String URL_UPDATECLIENT = "http://121.40.142.141:8090/Jfinal/api/member/update";//更新会员信息（GET）
-    private static final String URL_HEAD_PORTRAIT = "http://121.40.142.141:8090/Jfinal/";//图片头地址
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +48,8 @@ public class MenuInfoActivity extends BaseActivity implements View.OnClickListen
         Bundle bundle = getIntent().getBundleExtra("bundle");
         client = (Client) bundle.getSerializable("client");//从上级activity获取
         if (client == null){
-            client = getClientByGET(URL_MEMBER);
+            HttpUtils httpUtils = new HttpUtils(this);
+            client = httpUtils.getClientByGET(Str.URL_MEMBER);
         }
 
         int level = client.getLevel();
@@ -69,7 +70,7 @@ public class MenuInfoActivity extends BaseActivity implements View.OnClickListen
         String real_name = client.getReal_name();
         //设置头像
         MyHeadTask myHeadTask = new MyHeadTask(img_head);
-        myHeadTask.execute(URL_HEAD_PORTRAIT, head_portrait);
+        myHeadTask.execute(Str.URL_HEAD_PORTRAIT, head_portrait);
         if (nick_name.equals("")){
             tv_nick_name.setText(phone);
             tv_signature.setVisibility(View.VISIBLE);

@@ -16,6 +16,7 @@ import com.delelong.diandian.BaseActivity;
 import com.delelong.diandian.ChoosePosition;
 import com.delelong.diandian.R;
 import com.delelong.diandian.bean.Client;
+import com.delelong.diandian.bean.Str;
 import com.delelong.diandian.pace.MyAMapLocation;
 
 /**
@@ -23,8 +24,6 @@ import com.delelong.diandian.pace.MyAMapLocation;
  */
 public class CommonAddressActivity extends BaseActivity implements View.OnClickListener{
 
-    private static final int REQUESTHOMECODE = 3;
-    private static final int REQUESTCOMPANYCODE = 4;
     private static final String TAG = "BAIDUMAPFORTEST";
 
     @Override
@@ -93,10 +92,10 @@ public class CommonAddressActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.ly_home:
-                intentActivityForResult(this, ChoosePosition.class, "choose", "home", myAMapLocation.getCity(), REQUESTHOMECODE);
+                intentActivityForResult(this, ChoosePosition.class, "choose", "home", myAMapLocation.getCity(), Str.REQUESTHOMECODE);
                 break;
             case R.id.ly_company:
-                intentActivityForResult(this, ChoosePosition.class, "choose", "company", myAMapLocation.getCity(), REQUESTCOMPANYCODE);
+                intentActivityForResult(this, ChoosePosition.class, "choose", "company", myAMapLocation.getCity(), Str.REQUESTCOMPANYCODE);
                 break;
         }
     }
@@ -114,7 +113,7 @@ public class CommonAddressActivity extends BaseActivity implements View.OnClickL
         }
         Bundle bundle = data.getBundleExtra("bundle");
         switch (resultCode) {
-            case REQUESTHOMECODE:
+            case Str.REQUESTHOMECODE:
                 if (value.equals("home")) {
                     mHomePoiItem = bundle.getParcelable("PoiInfo");
                     Log.i(TAG, "onActivityResult: " + mHomePoiItem.getTitle());
@@ -126,7 +125,7 @@ public class CommonAddressActivity extends BaseActivity implements View.OnClickL
                             .commit();
                 }
                 break;
-            case REQUESTCOMPANYCODE:
+            case Str.REQUESTCOMPANYCODE:
                 if (value.equals("company")) {
                     mCompanyPoiItem = bundle.getParcelable("PoiInfo");
                     tv_company_address.setVisibility(View.VISIBLE);
