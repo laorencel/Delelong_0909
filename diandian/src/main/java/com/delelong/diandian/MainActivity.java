@@ -30,6 +30,8 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
@@ -290,6 +292,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //        myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
 //        aMap.setMyLocationStyle(myLocationStyle);
 
+        CameraUpdate update = CameraUpdateFactory.zoomTo(15);
+        aMap.animateCamera(update);
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
         aMap.setLocationSource(this);// 设置定位监听
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
@@ -508,8 +512,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     mPositionPoiItem = bundle.getParcelable("PoiInfo");
                     Log.i(TAG, "onActivityResult: " + mPositionPoiItem.getTitle());
                     myPosition.setText(mPositionPoiItem.getTitle());
-//                    client.setStartLatitude(mPositionPoiItem.getLatLonPoint().getLatitude());
-//                    client.setStartLongitude(mPositionPoiItem.getLatLonPoint().getLongitude());
+                    //定位到打车骑点
+                    double startLatitude = mPositionPoiItem.getLatLonPoint().getLatitude();
+                    double startLongitude = mPositionPoiItem.getLatLonPoint().getLongitude();
+                    centerToMyLocation(aMap, mLocationClient, myOrientationListener, startLatitude, startLongitude);
                 }
                 break;
             case Str.REQUESTDESTINATIONCODE:
@@ -518,13 +524,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     myDestination.setText(mDestinationPoiItem.getTitle());
                     //添加终点标记
                     addDestinationMarker(mDestinationPoiItem);
-                    //终点坐标
-                    double desLatitude = mDestinationPoiItem.getLatLonPoint().getLatitude();
-                    double desLongitude = mDestinationPoiItem.getLatLonPoint().getLongitude();
-//                    centerToMyLocation(aMap, mLocationClient, myOrientationListener, desLatitude, desLongitude);
-
-//                    client.setEndLatitude(desLatitude);
-//                    client.setEndLongitude(desLongitude);
 
                     //设置拼车按钮可见
                     if (tv_pinChe == null) {
@@ -640,7 +639,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onStop() {
         super.onStop();
         //停止定位
-        aMap.setMyLocationEnabled(false);
+//        aMap.setMyLocationEnabled(false);
         if (mLocationClient != null) {
             mLocationClient.stopLocation();
         }
@@ -672,7 +671,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onResume();
         mMapView.onResume();
 //        mLocationClient.startLocation();
-        aMap.setMyLocationEnabled(true);
+//        aMap.setMyLocationEnabled(true);
 //        aMap.setMyLocationStyle(myLocationStyle);
     }
 

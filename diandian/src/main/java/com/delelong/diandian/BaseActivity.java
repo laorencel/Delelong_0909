@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.model.LatLng;
 import com.delelong.diandian.listener.MyOrientationListener;
@@ -67,8 +68,10 @@ public class BaseActivity extends AppCompatActivity {
                 mLocationClient.startLocation();
             }
         }
-        aMap.animateCamera(CameraUpdateFactory.changeLatLng(new LatLng(
-                myLatitude, myLongitude)));
+        LatLng latLng = new LatLng(myLatitude, myLongitude);
+        CameraUpdate update = CameraUpdateFactory.zoomTo(15);
+        aMap.animateCamera(update);
+        aMap.animateCamera(CameraUpdateFactory.changeLatLng(latLng));
     }
 
     public <T> void intentActivityForResult(Context context, Class<T> tClass, String key, String value, String city, int requestCode) {
