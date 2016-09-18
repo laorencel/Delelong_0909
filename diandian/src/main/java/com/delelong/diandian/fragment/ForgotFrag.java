@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.delelong.diandian.LoginActivity;
 import com.delelong.diandian.R;
 import com.delelong.diandian.bean.Str;
 import com.delelong.diandian.http.HttpUtils;
-import com.delelong.diandian.menuActivity.SettingActivity;
 import com.delelong.diandian.utils.MD5;
 
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.List;
  */
 public class ForgotFrag extends Fragment implements View.OnClickListener{
 
+    private static final String TAG = "BAIDUMAPFORTEST";
     View view;
     @Nullable
     @Override
@@ -85,6 +87,7 @@ public class ForgotFrag extends Fragment implements View.OnClickListener{
                     return;
                 }
                 postForVerification();
+                Log.i(TAG, "onClick: ");
                 if (resultForVerific.get(0).equals("FAILURE")) {
                     //失败 重新获取
                     postForVerification();
@@ -182,13 +185,13 @@ public class ForgotFrag extends Fragment implements View.OnClickListener{
             resultForVerific =httpUtils.getVerification(Str.URL_SMSCODE, phone, Str.VERIFICATION_TYPE_RESET);
         }
     }
-    SettingActivity activity;
+    LoginActivity activity;
     SharedPreferences preferences;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (SettingActivity) getActivity();
+        activity = (LoginActivity) getActivity();
         preferences = activity.getSharedPreferences("user", Context.MODE_PRIVATE);
     }
 }

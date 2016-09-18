@@ -32,6 +32,7 @@ import com.delelong.diandian.menuActivity.FeedBackActivity;
 import com.delelong.diandian.menuActivity.MallActivity;
 import com.delelong.diandian.menuActivity.MenuInfoActivity;
 import com.delelong.diandian.menuActivity.SettingActivity;
+import com.delelong.diandian.menuActivity.WalletActivity;
 import com.delelong.diandian.view.RoundImageView;
 
 import java.util.ArrayList;
@@ -126,7 +127,7 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
 
                         break;
                     case 1://我的钱包
-
+                        startActivityWithBundle(WalletActivity.class);
                         break;
                     case 2://问题反馈
                         startActivityWithBundle(FeedBackActivity.class);
@@ -225,11 +226,15 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (MainActivity) getActivity();
+        activity.toLogin();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (!activity.getLogining()){
+            activity.toLogin();
+        }
     }
 
     @Override

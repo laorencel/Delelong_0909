@@ -27,9 +27,10 @@ public class MyCameraChangeListener implements AMap.OnCameraChangeListener {
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         if (!isFirstIn){
-            textView.setText("正在定位起点...");
             isFirstIn = !isFirstIn;
+            return;
         }
+        textView.setText("正在定位起点...");
     }
 
     LatLng centerOfMap;

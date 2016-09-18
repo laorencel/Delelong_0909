@@ -3,13 +3,14 @@
     android:shape="oval"
     android:useLevel="false">
     <solid android:color="@color/colorPrimary" />
+    <!--<solid android:color="@color/colorPrimary" />-->
     <padding
         android:left="2dp"
         android:top="1dp"
         android:right="2dp"
         android:bottom="1dp" />
     <solid
-        android:color="@color/colorAlpha" />
+        android:color="#60c72c" />
     <stroke
         android:width="0.2dp"
         android:color="@color/colorGray" />

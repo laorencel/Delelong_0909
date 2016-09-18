@@ -68,10 +68,9 @@ public class StartActivity extends BaseActivity {
             }
             else if (loginResult.get(0).equals("ERROR")) {
                 Toast.makeText(this, "登陆出错,请重新登陆", Toast.LENGTH_SHORT).show();
-                return;
+                startActivity(new Intent(this, LoginActivity.class));
             }else if (loginResult.get(0).equals("FAILURE")) {
-                Toast.makeText(this, "登陆失败,请重新登陆", Toast.LENGTH_SHORT).show();
-                return;
+                startActivity(new Intent(this, LoginActivity.class));
             }
             finish();
         }

@@ -16,10 +16,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.delelong.diandian.LoginActivity;
 import com.delelong.diandian.R;
 import com.delelong.diandian.bean.Str;
 import com.delelong.diandian.http.HttpUtils;
+import com.delelong.diandian.menuActivity.SettingActivity;
 import com.delelong.diandian.utils.MD5;
 
 import java.util.List;
@@ -135,13 +135,13 @@ public class ModifyFrag extends Fragment implements View.OnClickListener {
         showPwd = !showPwd;
     }
 
-    LoginActivity activity;
+    SettingActivity activity;
     SharedPreferences preferences;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (LoginActivity) getActivity();
+        activity = (SettingActivity) getActivity();
         preferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
     }
 

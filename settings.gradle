@@ -1,1 +1,2 @@
 include ':app', ':diandian'
+include ':payDemoActivityPAY20'

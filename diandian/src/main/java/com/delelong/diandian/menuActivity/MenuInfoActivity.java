@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.delelong.diandian.BaseActivity;
@@ -19,6 +20,8 @@ import com.delelong.diandian.view.RoundImageView;
 public class MenuInfoActivity extends BaseActivity implements View.OnClickListener{
 
 
+    private static final String TAG = "BAIDUMAPFORTEST";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +35,7 @@ public class MenuInfoActivity extends BaseActivity implements View.OnClickListen
     RoundImageView img_head;
     TextView tv_nick_name,tv_signature;
     TextView tv_certification_detail,tv_owner_detail;
+    RelativeLayout rl_certification,rl_owner;
 
     private void initView() {
         img_head = (RoundImageView) findViewById(R.id.img_head);
@@ -41,14 +45,21 @@ public class MenuInfoActivity extends BaseActivity implements View.OnClickListen
         tv_signature = (TextView) findViewById(R.id.tv_signature);
         tv_certification_detail = (TextView) findViewById(R.id.tv_certification_detail);
         tv_owner_detail = (TextView) findViewById(R.id.tv_owner_detail);
+
+        rl_certification = (RelativeLayout) findViewById(R.id.rl_certification);
+        rl_owner = (RelativeLayout) findViewById(R.id.rl_owner);
+        rl_certification.setOnClickListener(this);
+        rl_owner.setOnClickListener(this);
+
+        httpUtils = new HttpUtils(this);
     }
 
     Client client;
+    HttpUtils httpUtils;
     private void initMsg() {
         Bundle bundle = getIntent().getBundleExtra("bundle");
         client = (Client) bundle.getSerializable("client");//从上级activity获取
         if (client == null){
-            HttpUtils httpUtils = new HttpUtils(this);
             client = httpUtils.getClientByGET(Str.URL_MEMBER);
         }
 
@@ -96,17 +107,29 @@ public class MenuInfoActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
+        Bundle bundle = getIntent().getBundleExtra("bundle");
+        bundle.putSerializable("client",client);
         switch (v.getId()){
             case R.id.arrow_back:
                 finish();
                 break;
             case R.id.tv_modifyInfo:
-                Bundle bundle = getIntent().getBundleExtra("bundle");
-                bundle.putSerializable("client",client);
+
+                intentActivityWithBundle(this,MenuModifyInfoActivity.class,bundle);
+                break;
+            case R.id.rl_certification://身份认证
+                intentActivityWithBundle(this,CertificationActivity.class,bundle);
+                break;
+            case R.id.rl_owner://车主认证
                 intentActivityWithBundle(this,MenuModifyInfoActivity.class,bundle);
                 break;
         }
     }
 
-
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (client!=null)
+        client = httpUtils.getClientByGET(Str.URL_MEMBER);
+    }
 }

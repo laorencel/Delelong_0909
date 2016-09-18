@@ -98,6 +98,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/rl_certification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp">
@@ -137,6 +138,7 @@
             android:background="#dcdcdc"></View>
 
         <RelativeLayout
+            android:id="@+id/rl_owner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp">

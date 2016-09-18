@@ -1,13 +1,19 @@
 package com.delelong.diandian.http;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.amap.api.maps.model.LatLng;
+import com.delelong.diandian.LoginActivity;
+import com.delelong.diandian.bean.CarInfo;
 import com.delelong.diandian.bean.Client;
+import com.delelong.diandian.bean.DriverInfo;
 import com.google.common.primitives.Ints;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -134,6 +140,16 @@ public class HttpUtils {
                 connection.addRequestProperty("token", token);
                 connection.addRequestProperty("secret", secret);
             }
+            //获取车辆列表
+            else if (url_upDate.contains("/api/member/cars")) {
+                connection.addRequestProperty("token", token);
+                connection.addRequestProperty("secret", secret);
+            }
+            //获取代驾司机列表
+            else if (url_upDate.contains("/api/member/drivers")) {
+                connection.addRequestProperty("token", token);
+                connection.addRequestProperty("secret", secret);
+            }
 
             connection.setDoOutput(true);
             outputStream = connection.getOutputStream();
@@ -223,6 +239,9 @@ public class HttpUtils {
             object = new JSONObject(result);
             String status = object.getString("status");
             String msg = object.has("msg") ? object.getString("msg") : object.getString("message");
+            if (msg.equals("未登陆")){
+                toLogin();
+            }
             list.add(status);
             list.add(msg);
             JSONObject data = object.getJSONObject("data");
@@ -242,12 +261,19 @@ public class HttpUtils {
                     list.add(path);
                     list.add(name);
                     list.add(type);
+                } else if (data.has("plate_no")){
+                    //车辆列表
+
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return list;
+    }
+
+    private void toLogin() {
+        context.startActivity(new Intent(context, LoginActivity.class));
     }
 
     private class MyUpDateLocationTask extends AsyncTask<String, Void, Void> {
@@ -259,7 +285,150 @@ public class HttpUtils {
         }
     }
 
+
+    private List<CarInfo> carInfoByJson(String result) {
+        JSONObject object;
+        List<CarInfo> carInfos = new ArrayList<>();
+        List<String> list = new ArrayList<>();
+        try {
+            object = new JSONObject(result);
+            String status = object.getString("status");
+            String msg = object.has("msg") ? object.getString("msg") : object.getString("message");
+            if (msg.equals("未登陆")){
+                toLogin();
+            }
+            list.add(status);
+            list.add(msg);
+            JSONArray data = object.getJSONArray("data");
+            // data为空
+            if (data != null) {
+                for (int i = 0; i < data.length(); i++) {
+                    JSONObject object1 = data.getJSONObject(i);
+                    CarInfo info = new CarInfo(object1.getString("phone"),
+                            object1.getString("nick_name"),
+                            object1.getString("plate_no"),
+                            object1.getDouble("orientation"),
+                            object1.getDouble("id"),
+                            object1.getDouble("latitude"),
+                            object1.getDouble("longitude"),
+                            object1.getDouble("speed"));
+                    carInfos.add(info);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return carInfos;
+    }
+
+    /**
+     * 获取car列表线程
+     */
+    private class CarInfoThread extends Thread {
+        String url_upDate, detailStr;
+        CarInfoThread(String url_upDate, String detailStr) {
+            this.url_upDate = url_upDate;
+            this.detailStr = detailStr;
+        }
+        @Override
+        public void run() {
+            super.run();
+            String httpResult = connectPOSTHttp(url_upDate, detailStr);
+            carInfos = carInfoByJson(httpResult);
+        }
+    }
+
+    private List<DriverInfo> driverInfoByJson(String result) {
+        JSONObject object;
+        List<DriverInfo> driverInfos = new ArrayList<>();
+        List<String> list = new ArrayList<>();
+        try {
+            object = new JSONObject(result);
+            String status = object.getString("status");
+            String msg = object.has("msg") ? object.getString("msg") : object.getString("message");
+            if (msg.equals("未登陆")){
+                toLogin();
+            }
+            list.add(status);
+            list.add(msg);
+            JSONArray data = object.getJSONArray("data");
+            // data为空
+            if (data != null) {
+                for (int i = 0; i < data.length(); i++) {
+                    JSONObject object1 = data.getJSONObject(i);
+                    DriverInfo info = new DriverInfo(
+                            object1.getString("phone"),
+                            object1.getString("nick_name"),
+                            object1.getDouble("orientation"),
+                            object1.getDouble("id"),
+                            object1.getDouble("latitude"),
+                            object1.getDouble("longitude"));
+                    driverInfos.add(info);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return driverInfos;
+    }
+
+    private class DriverInfoThread extends Thread {
+        String url_upDate, detailStr;
+        DriverInfoThread(String url_upDate, String detailStr) {
+            this.url_upDate = url_upDate;
+            this.detailStr = detailStr;
+        }
+        @Override
+        public void run() {
+            super.run();
+            String httpResult = connectPOSTHttp(url_upDate, detailStr);
+            driverInfos = driverInfoByJson(httpResult);
+        }
+    }
     ////////////////////////////////////////////////////////使用POST方法
+    private List<DriverInfo> driverInfos;
+    /**
+     * 获取代驾司机列表
+     * @param url_upDate
+     * @param leftTop
+     * @param rightBottom
+     * @return
+     */
+    public List<DriverInfo> getDriverInfos(String url_upDate, LatLng leftTop,LatLng rightBottom){
+        String upDateStr = "a=" + leftTop.latitude + "&b=" + leftTop.longitude
+                + "&c=" + rightBottom.latitude + "&d=" + rightBottom.longitude;//位置信息
+
+        DriverInfoThread infoThread = new DriverInfoThread(url_upDate,upDateStr);
+        infoThread.start();
+        try {
+            infoThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return driverInfos;
+    }
+
+    private List<CarInfo> carInfos;
+    /**
+     * 获取车辆列表
+     * @param url_upDate
+     * @param leftTop
+     * @param rightBottom
+     * @return List<CarInfo>
+     */
+    public List<CarInfo> getCarInfos(String url_upDate, LatLng leftTop,LatLng rightBottom){
+        String upDateStr = "a=" + leftTop.latitude + "&b=" + leftTop.longitude
+                + "&c=" + rightBottom.latitude + "&d=" + rightBottom.longitude;//位置信息
+
+        CarInfoThread infoThread = new CarInfoThread(url_upDate,upDateStr);
+        infoThread.start();
+        try {
+            infoThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return carInfos;
+    }
 
     private List<String> resultList;
     /**
@@ -359,9 +528,10 @@ public class HttpUtils {
      * @return
      */
     public List<String> getVerification(String url_upDate, String phone, String type) {
-        String upDateStr = "phone=" + phone + "&type=" + type;
+        String upDateStr = "?phone=" + phone + "&type=" + type;
         //利用线程获取数据
-        getHttpMsgByPOST(url_upDate, upDateStr);
+//        getHttpMsgByPOST(url_upDate, upDateStr);
+        getHttpMsgByGET(url_upDate+upDateStr);
         return resultByJson(httpResult);
     }
 
@@ -383,7 +553,7 @@ public class HttpUtils {
                 + "&address=" + client.getAddress()
                 + "&email=" + client.getEmail()
                 + "&gender=" + client.getGender()
-                + "&certificateNno=" + client.getCertificate_no()
+                + "&certificateNo=" + client.getCertificate_no()
                 + "&realName=" + client.getReal_name();
         //利用线程获取数据
         getHttpMsgByPOST(url_upDate, upDateStr);
@@ -469,6 +639,9 @@ public class HttpUtils {
             object = new JSONObject(result);
             String status = object.getString("status");
             String msg = object.has("msg") ? object.getString("msg") : object.getString("message");
+            if (msg.equals("未登陆")){
+                toLogin();
+            }
             list.add(status);
             list.add(msg);
             JSONObject data = object.getJSONObject("data");
@@ -563,6 +736,7 @@ public class HttpUtils {
             while ((len = inputStreamReader.read(chars)) != -1) {
                 stringBuilder.append(chars, 0, len);
             }
+            Log.i(TAG, "httpUpDateFile: "+stringBuilder.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Log.i(TAG, "httpUpDateFile: " + e);

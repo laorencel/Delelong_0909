@@ -7,13 +7,11 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.text.Html;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -45,6 +43,7 @@ import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.RouteSearch;
+import com.delelong.diandian.bean.CarInfo;
 import com.delelong.diandian.bean.Client;
 import com.delelong.diandian.bean.Str;
 import com.delelong.diandian.fragment.MenuFrag;
@@ -71,7 +70,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         initActionBar();
         setContentView(R.layout.activity_main);
 
-        initScreen();
         isFirstIn = true;
         httpUtils = new HttpUtils(this);
         setUpMap(savedInstanceState);
@@ -79,33 +77,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setMyCameraChangeListenerListener();
         setMyRouteSearchListener();
     }
-    Point leftTop,rightTop,leftBottom,rightBottom;
-    private void initScreen() {
-        DisplayMetrics dm = new DisplayMetrics();
-        //取得窗口属性
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-        //窗口的宽度
-        int screenWidth = dm.widthPixels;
-        //窗口高度
-        int screenHeight = dm.heightPixels;
-
-        leftTop = new Point(0,0);
-        rightTop = new Point(0,screenWidth);
-        leftBottom = new Point(screenHeight,0);
-        rightBottom = new Point(screenHeight,screenWidth);
-    }
-    private void getVisibility(){
-        LatLng leftTopLat = aMap.getProjection().fromScreenLocation(leftTop);
-        LatLng rightTopLat =aMap.getProjection().fromScreenLocation(rightTop);
-        LatLng leftBottomLat =aMap.getProjection().fromScreenLocation(leftBottom);
-        LatLng rightBottomLat =aMap.getProjection().fromScreenLocation(rightBottom);
-        Log.i(TAG, "leftTopLat: "+"latitude/"+leftTopLat.latitude+"longitude/"+leftTopLat.longitude);
-        Log.i(TAG, "rightTopLat: "+"latitude/"+rightTopLat.latitude+"longitude/"+rightTopLat.longitude);
-        Log.i(TAG, "leftBottomLat: "+"latitude/"+leftBottomLat.latitude+"longitude/"+leftBottomLat.longitude);
-        Log.i(TAG, "rightBottomLat: "+"latitude/"+rightBottomLat.latitude+"longitude/"+rightBottomLat.longitude);
-    }
-
 
     MenuFrag menuFrag;
     android.support.v7.app.ActionBar actionBar;
@@ -144,6 +115,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void getDrivePath(DrivePath drivePath) {
                 mDrivePath = drivePath;
+                if (mDrivePath!=null){
+                    Log.i(TAG, "getDrivePath: "+drivePath.getTollDistance());
+
+                }
             }
         });
         //根据路径获取里程数等
@@ -155,7 +130,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private MyCameraChangeListener myCameraChangeListener;
     List<PoiItem> pois;
     LatLng centerOfMap;
-
+    private List<CarInfo> carInfos;
     /**
      * 地图移动状态监听
      */
@@ -182,9 +157,43 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void getLatlng(LatLng center) {
                 centerOfMap = center;
+                Log.i(TAG, "getLatlng: "+center);
+                LatLng leftTop = new LatLng(centerOfMap.latitude-0.000015,centerOfMap.longitude-0.000015);
+                LatLng rightBottom = new LatLng(centerOfMap.latitude+0.000015,centerOfMap.longitude+0.000015);
+                carInfos = httpUtils.getCarInfos(Str.URL_GETCARINFO,leftTop,rightBottom);//获取车辆列表
+                Log.i(TAG, "getLatlng:carInfos// "+carInfos);
+                //测试
+//                List<CarInfo> list = new ArrayList<CarInfo>();
+//                for (int i = 0; i < 10; i++) {
+//                    CarInfo carInfo = new CarInfo();
+//                    carInfo.setLatitude(centerOfMap.latitude+i/100);
+//                    carInfo.setLongitude(centerOfMap.longitude+i/100);
+//                    carInfo.setOrientation(i*10);
+//                    list.add(carInfo);
+//                }
+                if (carInfos.size()>=1){
+                    //显示车辆
+                    addCars(carInfos);
+                }
             }
         });
     }
+
+    private void addCars(List<CarInfo> carInfos){
+        aMap.clear(true);
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.car);
+        Marker marker = null;
+        MarkerOptions options = null;
+        LatLng latlng = null;
+        for (CarInfo info : carInfos){
+            latlng = new LatLng(info.getLatitude(),info.getLongitude());
+            options = new MarkerOptions().icon(icon).position(latlng);
+            marker = aMap.addMarker(options);
+            marker.setRotateAngle(Float.parseFloat(info.getOrientation()+""));
+            marker.setObject(info);
+        }
+    }
+
 
     private FragmentManager mFragManager;
     private TimeFrag mTimeFrag;
@@ -327,7 +336,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                 //判断是否上传位置
                 if (mAMapLocation!=null){
-                    upDateLocation();
+//                    upDateLocation();
                 }
 
                 mAMapLocation = aMapLocation;
@@ -398,6 +407,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void setLogining(boolean isLogining) {
         this.isLogining = isLogining;
     }
+    public boolean getLogining(){
+        return isLogining;
+    }
 
     @Override
     public void onClick(View v) {
@@ -419,7 +431,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.myLocation:
                 //定位到我的位置
                 centerToMyLocation(aMap, mLocationClient, myOrientationListener, mAMapLocation.getLatitude(), mAMapLocation.getLongitude());
-                getVisibility();
+//                getVisibility();
                 break;
             case R.id.showTime:
                 lyOfTime.setVisibility(View.VISIBLE);
@@ -462,7 +474,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 orderedMode = "不拼车";
                 break;
             case R.id.tv_confirm:
-                if (mPositionPoiItem == null || mDestinationPoiItem == null) {
+                if (mPositionPoiItem == null || mDestinationPoiItem == null
+                ||myDestination.getText().toString().equals("")||myPosition.getText().toString().equals("")) {
                     ToastUtil.show(context, "请先设置起始点");
                     return;
                 }
@@ -476,6 +489,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 RouteSearch.DriveRouteQuery routeQuery = new RouteSearch.DriveRouteQuery(fromAndTo, RouteSearch.DrivingDefault, null, null, "");
                 mRouteSearch.calculateDriveRouteAsyn(routeQuery);// 异步路径规划驾车模式查询
 
+
                 hidePinChe();
                 break;
         }
@@ -485,13 +499,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      * 判断不在登陆状态，先登陆
      * 需修改成dialog形式
      */
-    private void toLogin() {
+    public void toLogin() {
         if (!isLogining) {
             Toast.makeText(MainActivity.this, "请先登陆", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }
-        ;
     }
 
     PoiItem mPositionPoiItem;//起点poi
@@ -515,7 +528,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     //定位到打车骑点
                     double startLatitude = mPositionPoiItem.getLatLonPoint().getLatitude();
                     double startLongitude = mPositionPoiItem.getLatLonPoint().getLongitude();
-                    centerToMyLocation(aMap, mLocationClient, myOrientationListener, startLatitude, startLongitude);
+//                    centerToMyLocation(aMap, mLocationClient, myOrientationListener, startLatitude, startLongitude);
                 }
                 break;
             case Str.REQUESTDESTINATIONCODE:
@@ -615,7 +628,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mLocationClient = null;
     }
 
-    public static boolean isForeground = false;
+    public static boolean isForeground = true;
 
     @Override
     protected void onStart() {
@@ -696,6 +709,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     isTwice = !isTwice;
                     if (ly_pinChe != null) {
                         hidePinChe();
+                        myDestination.setText("");
+                        myDestination.setHint("目的地");
                     }
 
                     Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
