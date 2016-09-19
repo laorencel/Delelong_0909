@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:background="#ffff"
-        android:padding="10dp">
+        android:padding="13dp">
 
         <ImageButton
             android:id="@+id/arrow_back"
@@ -23,6 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:textSize="18sp"
             android:text="实名认证" />
     </RelativeLayout>
 

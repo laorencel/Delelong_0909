@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/icon_chb_checked" android:state_checked="true">
+        <scale android:scaleHeight="15dp" android:scaleWidth="15dp"></scale>
+    </item>
+    <item android:drawable="@drawable/icon_chb_unchecked" android:state_checked="false">
+        <scale android:scaleHeight="15dp" android:scaleWidth="15dp"></scale>
+    </item>
+    <item android:drawable="@drawable/icon_chb_unchecked">
+        <scale android:scaleHeight="15dp" android:scaleWidth="15dp"></scale>
+    </item>
+</selector>

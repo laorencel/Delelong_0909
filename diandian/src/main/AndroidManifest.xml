@@ -51,6 +51,8 @@
         <activity android:name=".menuActivity.FeedBackActivity"></activity>
         <activity android:name=".menuActivity.CertificationActivity"></activity>
         <activity android:name=".menuActivity.WalletActivity"></activity>
+        <activity android:name=".menuActivity.PaymentActivity"></activity>
+        <activity android:name=".menuActivity.InvoiceActivity"></activity>
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" ></service>
 

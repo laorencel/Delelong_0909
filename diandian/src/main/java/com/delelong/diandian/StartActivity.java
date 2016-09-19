@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+import com.delelong.diandian.bean.Str;
 import com.delelong.diandian.http.HttpUtils;
 
 import java.util.List;
@@ -19,7 +20,6 @@ import java.util.List;
 public class StartActivity extends BaseActivity {
 
     private static final String TAG = "BAIDUMAPFORTEST";
-    public static final String URL_LOGIN = "http://121.40.142.141:8090/Jfinal/api/login";
     Handler handler;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class StartActivity extends BaseActivity {
             pwd = preferences.getString("pwd", null);
 //            List<String> loginResult = loginApp(URL_LOGIN, phone, pwd);
             HttpUtils httpUtils = new HttpUtils(this);
-            List<String> loginResult = httpUtils.login(URL_LOGIN, phone, pwd);
+            List<String> loginResult = httpUtils.login(Str.URL_LOGIN, phone, pwd);
 
             if (loginResult.get(0).equalsIgnoreCase("OK")){
                 startActivity(new Intent(this, MainActivity.class));

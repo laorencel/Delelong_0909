@@ -35,12 +35,11 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
     <style name="myRatingBar" parent="Widget.AppCompat.RatingBar">
-
         <item name="android:progressDrawable">@drawable/bg_ratingbar</item>
-
         <item name="android:minHeight">48dip</item>
-
         <item name="android:maxHeight">48dip</item>
-
+    </style>
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/style_chb</item>
     </style>
 </resources>

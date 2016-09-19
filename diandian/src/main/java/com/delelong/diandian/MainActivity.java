@@ -115,16 +115,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void getDrivePath(DrivePath drivePath) {
                 mDrivePath = drivePath;
-                if (mDrivePath!=null){
+                if (mDrivePath!=null){//根据路径获取里程数等
                     Log.i(TAG, "getDrivePath: "+drivePath.getTollDistance());
 
                 }
             }
         });
-        //根据路径获取里程数等
-        if (mDrivePath != null) {
-            //待实现
-        }
     }
 
     private MyCameraChangeListener myCameraChangeListener;
@@ -157,11 +153,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void getLatlng(LatLng center) {
                 centerOfMap = center;
-                Log.i(TAG, "getLatlng: "+center);
-                LatLng leftTop = new LatLng(centerOfMap.latitude-0.000015,centerOfMap.longitude-0.000015);
+                LatLng leftTop = new LatLng(centerOfMap.latitude-0.000015,centerOfMap.longitude-0.000015);//半径2公里
                 LatLng rightBottom = new LatLng(centerOfMap.latitude+0.000015,centerOfMap.longitude+0.000015);
                 carInfos = httpUtils.getCarInfos(Str.URL_GETCARINFO,leftTop,rightBottom);//获取车辆列表
-                Log.i(TAG, "getLatlng:carInfos// "+carInfos);
                 //测试
 //                List<CarInfo> list = new ArrayList<CarInfo>();
 //                for (int i = 0; i < 10; i++) {

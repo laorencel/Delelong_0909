@@ -11,6 +11,7 @@ import com.delelong.diandian.LoginActivity;
 import com.delelong.diandian.bean.CarInfo;
 import com.delelong.diandian.bean.Client;
 import com.delelong.diandian.bean.DriverInfo;
+import com.delelong.diandian.utils.ToastUtil;
 import com.google.common.primitives.Ints;
 
 import org.json.JSONArray;
@@ -55,7 +56,7 @@ public class HttpUtils {
         token = preferences.getString("token", null);
         secret = preferences.getString("sercet", null);
         registrationId = JPushInterface.getRegistrationID(context);
-        Log.i(TAG, "HttpUtils: " + registrationId);
+        Log.i(TAG, "HttpUtils:registrationId: "+registrationId);
     }
 
 //    //
@@ -169,6 +170,7 @@ public class HttpUtils {
         } catch (IOException e) {
             e.printStackTrace();
             Log.i(TAG, "connectPOSTHttp: IOException e"+e);
+            ToastUtil.show(context,"连接错误，请稍后重试");
         } finally {
             if (outputStream != null) {
                 try {
@@ -190,7 +192,7 @@ public class HttpUtils {
                 connection.disconnect();
             }
         }
-        Log.i(TAG, "getHttpResult: " + stringBuilder.toString());
+        Log.i(TAG, "connectPOSTHttp: " + stringBuilder.toString());
         return stringBuilder.toString();
     }
 
@@ -466,7 +468,6 @@ public class HttpUtils {
                 }
             }
         }
-        Log.i(TAG, "login: " + registrationId);
         String upDateStr = "username=" + name + "&registrationId=" + registrationId + "&password=" + pwd;//注册
         //利用线程获取数据
         getHttpMsgByPOST(url_upDate, upDateStr);
@@ -555,6 +556,7 @@ public class HttpUtils {
                 + "&gender=" + client.getGender()
                 + "&certificateNo=" + client.getCertificate_no()
                 + "&realName=" + client.getReal_name();
+        Log.i(TAG, "upDateClient: "+client.getPost_code());
         //利用线程获取数据
         getHttpMsgByPOST(url_upDate, upDateStr);
         return resultByJson(httpResult);

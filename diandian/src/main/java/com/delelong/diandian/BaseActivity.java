@@ -23,7 +23,9 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.model.LatLng;
+import com.delelong.diandian.bean.Client;
 import com.delelong.diandian.listener.MyOrientationListener;
+import com.delelong.diandian.pace.MyAMapLocation;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -258,5 +260,21 @@ public class BaseActivity extends AppCompatActivity {
                 Log.i(TAG, "onReceive: showMsg:" + showMsg.toString());
             }
         }
+    }
+
+    /**
+     *
+     * @param tClass 目标Class
+     * @param <T>
+     */
+    public  <T> void startActivityWithBundle(Class<T> tClass, MyAMapLocation myAMapLocation, Client client) {
+        Bundle bundle = new Bundle();
+        if (myAMapLocation != null) {
+            bundle.putSerializable("myAMapLocation", myAMapLocation);//传递我的位置
+        }
+        if (client != null) {
+            bundle.putSerializable("client", client);
+        }
+        intentActivityWithBundle(getApplicationContext(), tClass, bundle);
     }
 }

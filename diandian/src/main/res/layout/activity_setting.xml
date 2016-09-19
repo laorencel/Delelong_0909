@@ -12,12 +12,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="15dp"
         android:background="#ffff"
         android:layout_marginBottom="1dp">
 
         <ImageButton
             android:id="@+id/arrow_back"
+            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@mipmap/back_arrow" />
@@ -27,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:text="设置" />
     </RelativeLayout>
 
@@ -53,16 +54,6 @@
         android:gravity="center_vertical"
         android:padding="15dp"
         android:text="常用地址" />
-
-    <Button
-        android:id="@+id/btn_remindMode"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_text_custome"
-        android:gravity="center_vertical"
-        android:padding="15dp"
-        android:text="提醒模式" />
 
     <Button
         android:id="@+id/btn_clause"

@@ -4,16 +4,12 @@
     android:layout_height="match_parent"
     android:background="#eaeaea"
     android:orientation="vertical">
-    <LinearLayout
-        android:id="@+id/ly_chooseFrag"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"></LinearLayout>
-    <!--actionbar-->
+
     <RelativeLayout
+        android:id="@+id/rl_actionBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
+        android:layout_marginBottom="10dp"
         android:background="#ffff"
         android:padding="13dp">
 
@@ -24,200 +20,175 @@
             android:background="@mipmap/back_arrow" />
 
         <TextView
-            android:id="@+id/tv_modify"
+            android:id="@+id/tv_bar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="提 交" />
+            android:layout_centerInParent="true"
+            android:text="开票"
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/ly_modifyHead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="#ffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="13dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="公司抬头"
+            android:textAlignment="center"
+            android:textSize="13sp" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:background="@null"
+            android:hint="填写公司抬头"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="#ffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="13dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="发票内容"
+            android:textAlignment="center"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="客运服务费"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:background="#ffff"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="15dp">
-
-        <com.delelong.diandian.view.RoundImageView
-            android:id="@+id/img_head"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/img_head_menuinfo" />
-
-        <TextView
-            android:id="@+id/tv_head"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="修改头像"
-            android:textSize="15sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffff"
-        android:padding="10dp">
+        android:padding="13dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:maxLines="1"
-            android:text="昵         称"
+            android:text="发票金额"
+            android:textAlignment="center"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="10.50元"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="#ffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="13dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="收件人"
             android:textAlignment="center"
             android:textSize="13sp" />
 
         <EditText
-            android:id="@+id/edt_nickName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:background="@null"
-            android:hint="先生"
-            android:maxLines="1"
+            android:hint="填写收件人"
             android:textSize="13sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
         android:background="#ffff"
-        android:padding="10dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="13dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:maxLines="1"
-            android:text="性         别"
+            android:text="联系电话"
             android:textAlignment="center"
             android:textSize="13sp" />
 
         <EditText
-            android:id="@+id/edt_gender"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:background="@null"
-            android:digits="男女"
-            android:hint="男"
-            android:maxLength="1"
-            android:maxLines="1"
+            android:hint="填写联系电话"
             android:textSize="13sp" />
-
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="1dp"
         android:background="#ffff"
-        android:padding="10dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="13dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:maxLines="1"
-            android:text="邮         箱"
+            android:text="所在地区"
             android:textAlignment="center"
             android:textSize="13sp" />
 
-        <EditText
-            android:id="@+id/edt_email"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:background="@null"
-            android:maxLines="1"
-            android:textSize="13sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffff"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:text="真实姓名"
-            android:textAlignment="center"
-            android:textSize="13sp" />
-
-        <EditText
-            android:id="@+id/edt_realName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:background="@null"
-            android:hint="张三"
-            android:maxLines="1"
-            android:textSize="13sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="#ffff"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:text="身份证号"
-            android:textAlignment="center"
-            android:textSize="13sp" />
-
-        <EditText
-            android:id="@+id/edt_certificateNno"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:background="@null"
-            android:maxLines="1"
-            android:textSize="13sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffff"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:text="地         址"
-            android:textAlignment="center"
-            android:textSize="13sp" />
         <TextView
             android:id="@+id/tv_city"
             android:layout_width="0dp"
             android:layout_weight="3"
-            android:text="安徽省 合肥市 包河区"
+            android:hint="安徽省 合肥市 包河区"
             android:textSize="13sp"
             android:layout_height="wrap_content" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
         android:background="#ffff"
-        android:padding="10dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="13dp">
 
         <TextView
             android:layout_width="0dp"
@@ -235,28 +206,57 @@
             android:background="@null"
             android:textSize="13sp" />
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#ffff"
-        android:padding="10dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="13dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="邮         编"
+            android:text="电子邮件"
             android:textAlignment="center"
             android:textSize="13sp" />
 
         <EditText
-            android:id="@+id/edt_postCode"
+            android:id="@+id/edt_email"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
+            android:hint="用于向您发送电子行程"
             android:background="@null"
             android:textSize="13sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginBottom="1dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:padding="13dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="18dp"
+            android:src="@drawable/icon_payment"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="18dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="货到付款，按实际邮费计价"
+            android:textSize="13sp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="10dp"
+        android:text="提交"
+        android:textColor="#ffff"
+        android:layout_height="wrap_content" />
 </LinearLayout>

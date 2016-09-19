@@ -204,8 +204,8 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
         MenuListItem item3 = new MenuListItem(R.drawable.icon_menu_tuijian, "推荐有奖");
         MenuListItem item4 = new MenuListItem(R.drawable.icon_menu_zhaomu, "司机招募");
         MenuListItem item5 = new MenuListItem(R.drawable.icon_menu_hezuo, "合作商城");
-        MenuListItem item6 = new MenuListItem(R.drawable.icon_menu_duihuan, "兑  换  码");
-        MenuListItem item7 = new MenuListItem(R.drawable.icon_menu_shezhi, "设        置");
+        MenuListItem item6 = new MenuListItem(R.drawable.icon_menu_duihuan, "兑换码");
+        MenuListItem item7 = new MenuListItem(R.drawable.icon_menu_shezhi, "设置");
         itemList = new ArrayList<>();
         itemList.add(item0);
         itemList.add(item1);

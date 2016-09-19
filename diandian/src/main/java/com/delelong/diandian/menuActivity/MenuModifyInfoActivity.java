@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -110,6 +111,7 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
                 if (client == null) client = httpUtils.getClientByGET(Str.URL_MEMBER);
                 if (httpUtils == null) httpUtils = new HttpUtils(this);
 
+                Log.i(TAG, "onClick: "+client);
                 List<String> result = httpUtils.upDateClient(Str.URL_UPDATECLIENT, client);
                 if (result.get(0).equalsIgnoreCase("OK")) {
                     Toast.makeText(MenuModifyInfoActivity.this, "更新成功", Toast.LENGTH_SHORT).show();
@@ -216,6 +218,7 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
         client.setCounty(county);
         client.setAddress(address);
         client.setPost_code(postCode);
+        Log.i(TAG, "getClientForUpDate: "+client);
     }
 
     //Choose Date 选择省市县
@@ -244,7 +247,7 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
         city_bundle = myAMapLocation.getCity();
         district_bundle = myAMapLocation.getDistrict();
         address_bundle = myAMapLocation.getAddress();
-        postCode_bundle = myAMapLocation.getAdCode();
+//        postCode_bundle = myAMapLocation.getAdCode();
 
         httpUtils = new HttpUtils(this);
         client = (Client) bundle.getSerializable("client");//从上级activity获取
@@ -284,10 +287,8 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
         } else {
             edt_address.setText(address_bundle);
         }
-        if (!address.equals("")) {
+        if (!post_code.equals("")) {
             edt_postCode.setText(post_code);
-        } else {
-            edt_postCode.setText(postCode_bundle);
         }
     }
 

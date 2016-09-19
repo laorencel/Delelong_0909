@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:background="#ffff"
-        android:padding="10dp">
+        android:padding="13dp">
 
         <ImageButton
             android:id="@+id/arrow_back"
@@ -25,26 +25,28 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="我的钱包"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_pay"
         android:layout_width="match_parent"
         android:background="@drawable/bg_text_custome"
         android:padding="10dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center_vertical"
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/img_pay"
             android:layout_width="20dp"
-            android:src="@drawable/amap_car"
+            android:src="@drawable/icon_pay"
             android:layout_marginRight="10dp"
             android:layout_height="20dp" />
         <TextView
             android:layout_toRightOf="@id/img_pay"
             android:layout_width="wrap_content"
             android:text="支付方式"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/tv_pay"
@@ -52,6 +54,85 @@
             android:layout_alignParentRight="true"
             android:text="支付宝"
             android:layout_marginRight="25dp"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_sum"
+        android:layout_width="match_parent"
+        android:background="@drawable/bg_text_custome"
+        android:padding="10dp"
+        android:layout_marginBottom="1dp"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img_sum"
+            android:layout_width="20dp"
+            android:src="@drawable/icon_sum"
+            android:layout_marginRight="10dp"
+            android:layout_height="20dp" />
+        <TextView
+            android:layout_toRightOf="@id/img_sum"
+            android:layout_width="wrap_content"
+            android:text="余额"
+            android:textSize="16sp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_sum"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="0.00元"
+            android:layout_marginRight="25dp"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_coupon"
+        android:layout_width="match_parent"
+        android:background="@drawable/bg_text_custome"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img_coupon"
+            android:layout_width="20dp"
+            android:src="@drawable/icon_coupon"
+            android:layout_marginRight="10dp"
+            android:layout_height="20dp" />
+        <TextView
+            android:layout_toRightOf="@id/img_coupon"
+            android:layout_width="wrap_content"
+            android:text="优惠券"
+            android:textSize="16sp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_coupon"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="0张"
+            android:layout_marginRight="25dp"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_invoice"
+        android:layout_width="match_parent"
+        android:background="@drawable/bg_text_custome"
+        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img_invoice"
+            android:layout_width="20dp"
+            android:src="@drawable/icon_invoice"
+            android:layout_marginRight="10dp"
+            android:layout_height="20dp" />
+        <TextView
+            android:layout_toRightOf="@id/img_invoice"
+            android:layout_width="wrap_content"
+            android:text="发票报销"
+            android:textSize="16sp"
             android:layout_height="wrap_content" />
     </RelativeLayout>
 </LinearLayout>
