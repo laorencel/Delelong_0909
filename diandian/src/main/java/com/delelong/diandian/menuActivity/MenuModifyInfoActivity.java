@@ -247,7 +247,6 @@ public class MenuModifyInfoActivity extends BaseActivity implements View.OnClick
         city_bundle = myAMapLocation.getCity();
         district_bundle = myAMapLocation.getDistrict();
         address_bundle = myAMapLocation.getAddress();
-//        postCode_bundle = myAMapLocation.getAdCode();
 
         httpUtils = new HttpUtils(this);
         client = (Client) bundle.getSerializable("client");//从上级activity获取

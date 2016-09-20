@@ -53,9 +53,10 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
     Client client;
     MyAMapLocation myAMapLocation;
     SharedPreferences preferences;
+    Bundle bundle;
     private void initMsg() {
         httpUtils = new HttpUtils(this);
-        Bundle bundle = getIntent().getBundleExtra("bundle");
+        bundle = getIntent().getBundleExtra("bundle");
         myAMapLocation = (MyAMapLocation) bundle.getSerializable("myAMapLocation");
         client = (Client) bundle.getSerializable("client");//从上级activity获取
         preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
@@ -86,7 +87,7 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
             case R.id.rl_coupon:
                 break;
             case R.id.rl_invoice:
-                startActivityWithBundle(InvoiceActivity.class,myAMapLocation,client);
+                intentActivityWithBundle(this,InvoiceActivity.class,bundle);
                 break;
         }
     }

@@ -1,10 +1,12 @@
 package com.delelong.diandian.menuActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.WebChromeClient;
+import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -13,6 +15,9 @@ import android.widget.ProgressBar;
 import com.delelong.diandian.BaseActivity;
 import com.delelong.diandian.R;
 import com.delelong.diandian.bean.Str;
+import com.delelong.diandian.utils.SystemUtils;
+import com.delelong.diandian.webchromeclient.DefaultWebChromeClient;
+import com.delelong.diandian.webchromeclient.WebChromeClientAboveFive;
 
 /**
  * Created by Administrator on 2016/9/12.
@@ -57,20 +62,53 @@ public class MallActivity extends BaseActivity {
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);//支持网页缓存
 
         //设置显示进度
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress == 100) {
-//                    closeDialog();
-                    progressBar.setVisibility(View.GONE);
-                } else {
-                    progressBar.setVisibility(View.VISIBLE);
-                    progressBar.setProgress(newProgress);
-//                    openDialog(newProgress);
+        String version = SystemUtils.getSystemVersion();
+        if (version.startsWith("5")){
+            webView.setWebChromeClient(new WebChromeClientAboveFive(this) {
+                @Override
+                public void onProgressChanged(WebView view, int newProgress) {
+                    if (newProgress == 100) {
+                        progressBar.setVisibility(View.GONE);
+                    } else {
+                        progressBar.setVisibility(View.VISIBLE);
+                        progressBar.setProgress(newProgress);
+                    }
+                    super.onProgressChanged(view, newProgress);
                 }
-                super.onProgressChanged(view, newProgress);
-            }
-        });
+                @Override
+                public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> valueCallback, android.webkit.WebChromeClient.FileChooserParams fileChooserParams) {
+                    // TODO Auto-generated method stub
+                    return super.onShowFileChooser( webView,  valueCallback,  fileChooserParams);
+                }
+                @Override
+                public void onActivityResult(int resultCode, Intent data) {
+                    super.onActivityResult(resultCode,data);
+                }
+
+            });
+        }else {
+            webView.setWebChromeClient(new DefaultWebChromeClient(this) {
+                @Override
+                public void onProgressChanged(WebView view, int newProgress) {
+                    if (newProgress == 100) {
+                        progressBar.setVisibility(View.GONE);
+                    } else {
+                        progressBar.setVisibility(View.VISIBLE);
+                        progressBar.setProgress(newProgress);
+                    }
+                    super.onProgressChanged(view, newProgress);
+                }
+                @Override
+                public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                    // TODO Auto-generated method stub
+                    super.openFileChooser( uploadMsg);
+                }
+                @Override
+                public void onActivityResult(int resultCode, Intent data) {
+                    super.onActivityResult(resultCode,data);
+                }
+            });
+        }
     }
 
     @Override

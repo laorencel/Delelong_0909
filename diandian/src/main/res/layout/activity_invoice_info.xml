@@ -46,11 +46,13 @@
             android:textSize="13sp" />
 
         <EditText
+            android:id="@+id/edt_company"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:background="@null"
             android:hint="填写公司抬头"
+            android:maxLines="1"
             android:textSize="13sp" />
     </LinearLayout>
 
@@ -97,6 +99,7 @@
             android:textSize="13sp" />
 
         <TextView
+            android:id="@+id/tv_totalSum"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
@@ -122,11 +125,13 @@
             android:textSize="13sp" />
 
         <EditText
+            android:id="@+id/edt_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:background="@null"
             android:hint="填写收件人"
+            android:maxLines="1"
             android:textSize="13sp" />
     </LinearLayout>
 
@@ -148,14 +153,19 @@
             android:textSize="13sp" />
 
         <EditText
+            android:id="@+id/edt_phone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:background="@null"
             android:hint="填写联系电话"
+            android:inputType="phone"
+            android:maxLines="1"
             android:textSize="13sp" />
     </LinearLayout>
+
     <LinearLayout
+        android:id="@+id/ly_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
@@ -175,10 +185,10 @@
         <TextView
             android:id="@+id/tv_city"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:hint="安徽省 合肥市 包河区"
-            android:textSize="13sp"
-            android:layout_height="wrap_content" />
+            android:hint="XX省 XX市 XX区"
+            android:textSize="13sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -204,8 +214,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:background="@null"
+            android:maxLines="1"
+            android:hint="填写详细地址"
             android:textSize="13sp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -227,36 +240,43 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:hint="用于向您发送电子行程"
             android:background="@null"
+            android:hint="用于向您发送电子行程"
+            android:maxLines="1"
             android:textSize="13sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:padding="13dp"
-        android:layout_height="wrap_content">
+        android:padding="13dp">
+
         <ImageView
             android:layout_width="18dp"
-            android:src="@drawable/icon_payment"
+            android:layout_height="18dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
-            android:layout_height="18dp" />
+            android:src="@drawable/icon_payment" />
+
         <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="货到付款，按实际邮费计价"
-            android:textSize="13sp"
-            android:layout_height="wrap_content" />
+            android:textSize="13sp" />
     </LinearLayout>
+
     <Button
+        android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:background="@drawable/bg_login"
         android:padding="10dp"
         android:text="提交"
         android:textColor="#ffff"
-        android:layout_height="wrap_content" />
+        android:textSize="18sp" />
 </LinearLayout>

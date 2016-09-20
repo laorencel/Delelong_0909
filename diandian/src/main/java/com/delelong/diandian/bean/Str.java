@@ -50,4 +50,5 @@ public class Str implements Serializable {
 
     public static final String MESSAGE_RECEIVED_ACTION = "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";//receiver服务
     public static final String URL_LIANCHENG = "http://www.52liancheng.com";//链城网
+//    public static final String URL_DRIVERENROLL = "http://192.168.4.110:8080/Jfinal/driver/enroll";//司机报名页面
 }

@@ -510,6 +510,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onActivityResult(requestCode, resultCode, data);
         String value = data.getStringExtra("key");
         if (value.equals("noChoice")) {
+            Log.i(TAG, "onActivityResult: noChoice");
             return;
         }
         Bundle bundle = data.getBundleExtra("bundle");

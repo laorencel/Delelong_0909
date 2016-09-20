@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -51,13 +52,14 @@ public class InvoiceActivity extends BaseActivity implements View.OnClickListene
         lv_invoice = (ListView) findViewById(R.id.lv_invoice);
         chb_all = (CheckBox) findViewById(R.id.chb_all);
         tv_total = (TextView) findViewById(R.id.tv_total);
+        tv_total.setText(Html.fromHtml("<font color='#Fe8a03'>"+checkNum+"</font> 个行程 共<font color='#Fe8a03'>"+totalSum+"</font>元"));
         btn_next = (Button) findViewById(R.id.btn_next);
         btn_next.setEnabled(false);//初始化不可点击
-
         btn_next.setOnClickListener(this);
     }
 
     HttpUtils httpUtils;
+    Bundle bundle;
     Client client;
     MyAMapLocation myAMapLocation;
     SharedPreferences preferences;
@@ -65,7 +67,7 @@ public class InvoiceActivity extends BaseActivity implements View.OnClickListene
     MyInvoiceAdapter adapter;
     private void initMsg() {
         httpUtils = new HttpUtils(this);
-        Bundle bundle = getIntent().getBundleExtra("bundle");
+        bundle = getIntent().getBundleExtra("bundle");
         if (bundle != null){
             myAMapLocation = (MyAMapLocation) bundle.getSerializable("myAMapLocation");
             client = (Client) bundle.getSerializable("client");//从上级activity获取
@@ -103,7 +105,6 @@ public class InvoiceActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.btn_next:
-                Bundle bundle = new Bundle();
                 bundle.putDouble("totalSum",totalSum);
                 intentActivityWithBundle(this,InvoiceInfoActivity.class,bundle);
                 break;
@@ -169,8 +170,8 @@ public class InvoiceActivity extends BaseActivity implements View.OnClickListene
         // 通知listView刷新
         adapter.notifyDataSetChanged();
         // TextView显示最新的选中数目
-        tv_total.setText(checkNum+"个行程 共"+totalSum+"元");
-//        tv_total.setText(Html.fromHtml("<font color='#Fe8a03'>checkNum</font> 个行程 共<font color='#Fe8a03'>checkNum</font>元"));
+//        tv_total.setText(checkNum+"个行程 共"+totalSum+"元");
+        tv_total.setText(Html.fromHtml("<font color='#Fe8a03'>"+checkNum+"</font> 个行程 共<font color='#Fe8a03'>"+totalSum+"</font>元"));
     }
 
 
