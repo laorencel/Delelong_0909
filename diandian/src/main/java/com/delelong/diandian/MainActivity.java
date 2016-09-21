@@ -461,6 +461,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 tv_pinChe.setTextColor(getResources().getColor(R.color.colorPinChe));
                 tv_buPinChe.setTextColor(Color.BLACK);
                 orderedMode = "拼车";
+                //测试
+//                Alipay alipay = new Alipay(this);
+//                alipay.payV2();
                 break;
             case R.id.tv_buPinChe:
                 tv_pinChe.setTextColor(Color.BLACK);
