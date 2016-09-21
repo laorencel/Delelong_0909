@@ -42,8 +42,6 @@ import cn.jpush.android.api.JPushInterface;
 public class BaseActivity extends AppCompatActivity {
     private static final String TAG = "BAIDUMAPFORTEST";
 //    public static final String URL_LOGIN = "http://121.40.142.141:8090/Jfinal/api/login";
-    public static final String APPTYPE_CLIENT = "2";
-    public static final String DEVICE_TYPE = "1";
     private String registrationId;
 
     @Override

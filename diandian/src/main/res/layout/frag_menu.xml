@@ -3,16 +3,8 @@
     android:id="@+id/menu_frag"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#a0000000"
-    android:descendantFocusability="blocksDescendants"
-    android:orientation="horizontal">
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:background="#ffffff"
-        android:orientation="vertical">
+    android:background="#ffffff"
+    android:orientation="vertical">
 
         <!--头像部分-->
         <LinearLayout
@@ -71,14 +63,4 @@
                 android:textColor="#ffffff"
                 android:textSize="18sp" />
         </LinearLayout>
-
-
-    </LinearLayout>
-    <!--透明部分-->
-    <LinearLayout
-        android:id="@+id/ly_back"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"></LinearLayout>
 </LinearLayout>

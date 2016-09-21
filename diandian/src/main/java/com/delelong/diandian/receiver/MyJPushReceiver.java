@@ -117,7 +117,7 @@ public class MyJPushReceiver extends BroadcastReceiver {
 
     //send msg to MainActivity
     private void processCustomMessage(Context context, Bundle bundle) {
-        if (MainActivity.isForeground) {
+//        if (MainActivity.isForeground) {
             String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
             String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
             Intent msgIntent = new Intent(MainActivity.MESSAGE_RECEIVED_ACTION);
@@ -134,7 +134,7 @@ public class MyJPushReceiver extends BroadcastReceiver {
 
             }
             context.sendBroadcast(msgIntent);
-        }
+//        }
     }
 }
 

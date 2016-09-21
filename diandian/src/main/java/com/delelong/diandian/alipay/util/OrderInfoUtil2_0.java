@@ -83,6 +83,8 @@ public class OrderInfoUtil2_0 {
 
 		keyValues.put("sign_type", "RSA");
 
+		keyValues.put("notify_url", "http://121.40.142.141:8090/Jfinal/file/alipaynotic");
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String timeNow = dateFormat.format(new Date());
 		keyValues.put("timestamp", timeNow);

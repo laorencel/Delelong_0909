@@ -1,79 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/rl_main"
+    android:id="@+id/drawerly"
     android:layout_height="match_parent">
 
-    <com.amap.api.maps.MapView
-        android:id="@+id/map"
+    <RelativeLayout
+        android:id="@+id/rl_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.amap.api.maps.MapView>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/nothing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
-
-    <LinearLayout
-        android:id="@+id/centerOfMap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/nothing"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/textInCenter"
+        <com.amap.api.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></com.amap.api.maps.MapView>
+        <RelativeLayout
+            android:id="@+id/actionbar"
+            android:layout_width="match_parent"
+            android:background="#ffff"
+            android:padding="10dp"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/head_actionbar"
+                android:layout_width="25dp"
+                android:background="@drawable/img_head_actionbar"
+                android:layout_height="25dp" />
+            <TextView
+                android:id="@+id/city_actionbar"
+                android:layout_width="wrap_content"
+                android:text="合肥"
+                android:textSize="15sp"
+                android:textColor="#868585"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content" />
+            <ImageButton
+                android:id="@+id/msg_actionbar"
+                android:layout_width="25dp"
+                android:background="@drawable/img_msg_actionbar"
+                android:layout_alignParentRight="true"
+                android:layout_height="25dp" />
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/nothing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <LinearLayout
+            android:id="@+id/centerOfMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/nothing"
+            android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_textincenter"
-            android:padding="8dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/timeOfReach"
+            <LinearLayout
+                android:id="@+id/textInCenter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/timeOfReach" />
+                android:background="@drawable/bg_textincenter"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-            <View
-                android:layout_width="0.8dp"
-                android:layout_height="match_parent"
-                android:layout_margin="2dp"
-                android:background="#cfcfcf"
-                android:padding="4dp"></View>
+                <TextView
+                    android:id="@+id/timeOfReach"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timeOfReach" />
 
-            <TextView
-                android:id="@+id/positon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/postion" />
+                <View
+                    android:layout_width="0.8dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="2dp"
+                    android:background="#cfcfcf"
+                    android:padding="4dp"></View>
+
+                <TextView
+                    android:id="@+id/positon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/postion" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/mark_center"
+                android:layout_width="22dp"
+                android:layout_height="40dp"
+                android:background="@drawable/mark_center" />
         </LinearLayout>
+        <!--始发地、目的地及隐藏的确认拼车-->
+        <include
+            android:id="@+id/location_include"
+            layout="@layout/item_location_include"></include>
+        <!--时间选择-->
+        <LinearLayout
+            android:id="@+id/frag_time_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+        <!--侧边菜单-->
+        <RelativeLayout
+            android:id="@+id/rl_menuFrag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"></RelativeLayout>
+    </RelativeLayout>
 
-        <ImageButton
-            android:id="@+id/mark_center"
-            android:layout_width="22dp"
-            android:layout_height="40dp"
-            android:background="@drawable/mark_center" />
-    </LinearLayout>
-    <!--始发地、目的地及隐藏的确认拼车-->
-    <include
-        android:id="@+id/location_include"
-        layout="@layout/item_location_include"></include>
-    <!--时间选择-->
-    <LinearLayout
-        android:id="@+id/frag_time_picker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"></LinearLayout>
-    <!--侧边菜单-->
     <RelativeLayout
-        android:id="@+id/rl_menuFrag"
-        android:layout_width="match_parent"
+        android:id="@+id/left_menu"
+        android:layout_width="200dp"
         android:layout_height="match_parent"
-        android:gravity="center"></RelativeLayout>
-</RelativeLayout>
+        android:layout_gravity="left"
+        android:background="@android:color/white">
+    </RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

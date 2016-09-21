@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DianDian</string>
+    <string name="app_name">司机点点</string>
     <string name="action_settings">settings</string>
     <string name="normal">普通地图</string>
     <string name="site">卫星地图</string>

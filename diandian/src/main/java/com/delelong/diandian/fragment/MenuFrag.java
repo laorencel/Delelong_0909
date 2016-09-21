@@ -8,10 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -41,7 +38,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/9/5.
  */
-public class MenuFrag extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
+public class MenuFrag extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private static final String TAG = "BAIDUMAPFORTEST";
 
@@ -86,9 +83,6 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
             case R.id.img_head:
                 //编辑个人信息页面
                 startActivityWithBundle(MenuInfoActivity.class);
-                break;
-            case R.id.ly_back:
-                hideMenu();//隐藏本菜单界面
                 break;
             case R.id.btn_loginOut:
                 List<String> loginOutResult = httpUtils.getLoginOutResultByGET(Str.URL_LOGINOUT);
@@ -152,9 +146,6 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
         }
     }
 
-    private boolean showGrid;
-
-
     LinearLayout menu_frag;
     LinearLayout ly_display;
     RoundImageView img_head;
@@ -162,10 +153,8 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
     ListView lv_menu;
     Button btn_loginOut;
 
-    LinearLayout ly_back;//隐藏菜单
 
     private void initView() {
-        mGestureDetector = new GestureDetector(new MySimpleGestureListener());
         menu_frag = (LinearLayout) view.findViewById(R.id.menu_frag);
 
 
@@ -181,17 +170,13 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
 
         btn_loginOut = (Button) view.findViewById(R.id.btn_loginOut);
 
-        ly_back = (LinearLayout) view.findViewById(R.id.ly_back);
         //加载ListView
         initListView();
     }
     private void setListener() {
         img_head.setOnClickListener(this);
-        ly_back.setOnClickListener(this);
         btn_loginOut.setOnClickListener(this);
         lv_menu.setOnItemClickListener(this);
-        lv_menu.setOnTouchListener(this);
-        menu_frag.setOnTouchListener(this);
     }
 
     private List<MenuListItem> itemList;
@@ -227,6 +212,7 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
         super.onCreate(savedInstanceState);
         activity = (MainActivity) getActivity();
         activity.toLogin();
+
     }
 
     @Override
@@ -240,8 +226,6 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (!activity.getSupportActionBar().isShowing())
-            activity.getSupportActionBar().show();
     }
 
     /**
@@ -253,45 +237,5 @@ public class MenuFrag extends Fragment implements View.OnClickListener, AdapterV
             menuFrag = (MenuFrag) activity.getFragmentManager().findFragmentByTag("menuFrag");
         }
         activity.getFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).hide(menuFrag).commit();
-        activity.getSupportActionBar().show();
-        activity.enableClick();//地图层按钮可用
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return mGestureDetector.onTouchEvent(event);
-    }
-
-    private GestureDetector mGestureDetector;
-
-    private class MySimpleGestureListener extends
-            GestureDetector.SimpleOnGestureListener {
-        /*****
-         * OnGestureListener的函数
-         *****/
-        final int FLING_MIN_DISTANCE = 200, FLING_MIN_VELOCITY = 200;
-        // 触发条件 ：
-        // X轴的坐标位移大于FLING_MIN_DISTANCE，且移动速度大于FLING_MIN_VELOCITY个像素/秒
-
-        // 参数解释：
-        // e1：第1个ACTION_DOWN MotionEvent
-        // e2：最后一个ACTION_MOVE MotionEvent
-        // velocityX：X轴上的移动速度，像素/秒
-        // velocityY：Y轴上的移动速度，像素/秒
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                               float velocityY) {
-            if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE
-                    && Math.abs(velocityX) > FLING_MIN_VELOCITY) {
-                // Fling left
-                Log.i(TAG, "Fling left");
-                hideMenu();//隐藏菜单栏
-            } else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE
-                    && Math.abs(velocityX) > FLING_MIN_VELOCITY) {
-                // Fling right
-                Log.i(TAG, "Fling right");
-            }
-            return true;
-        }
-
     }
 }

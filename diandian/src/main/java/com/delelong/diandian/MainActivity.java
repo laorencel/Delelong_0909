@@ -10,11 +10,11 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
+import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -43,6 +43,7 @@ import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.RouteSearch;
+import com.delelong.diandian.alipay.util.Alipay;
 import com.delelong.diandian.bean.CarInfo;
 import com.delelong.diandian.bean.Client;
 import com.delelong.diandian.bean.Str;
@@ -51,6 +52,7 @@ import com.delelong.diandian.fragment.TimeFrag;
 import com.delelong.diandian.http.ClientLocationInfo;
 import com.delelong.diandian.http.HttpUtils;
 import com.delelong.diandian.listener.MyCameraChangeListener;
+import com.delelong.diandian.listener.MyDrawerLayoutListener;
 import com.delelong.diandian.listener.MyOrientationListener;
 import com.delelong.diandian.listener.MyRouteSearchListener;
 import com.delelong.diandian.pace.MyAMapLocation;
@@ -67,9 +69,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActionBar();
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-
+        initActionBar();
         isFirstIn = true;
         httpUtils = new HttpUtils(this);
         setUpMap(savedInstanceState);
@@ -78,24 +80,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setMyRouteSearchListener();
     }
 
+    private DrawerLayout mDrawerLayout;
+    private MyDrawerLayoutListener myDrawerLayoutListener;
     MenuFrag menuFrag;
-    android.support.v7.app.ActionBar actionBar;
-    View menuView;
     ImageButton head_actionbar, msg_actionbar;
     TextView city_actionbar;
 
     private void initActionBar() {
-        actionBar = getSupportActionBar();
-        if (Build.VERSION.SDK_INT >= 21) {
-            //用于去除阴影
-            actionBar.setElevation(0);
-        }
-        actionBar.setDisplayShowCustomEnabled(true);
-        menuView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.menu_action, null);
-        actionBar.setCustomView(menuView, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
-        head_actionbar = (ImageButton) menuView.findViewById(R.id.head_actionbar);
-        msg_actionbar = (ImageButton) menuView.findViewById(R.id.msg_actionbar);
-        city_actionbar = (TextView) menuView.findViewById(R.id.city_actionbar);
+
+        head_actionbar = (ImageButton) findViewById(R.id.head_actionbar);
+        msg_actionbar = (ImageButton) findViewById(R.id.msg_actionbar);
+        city_actionbar = (TextView) findViewById(R.id.city_actionbar);
         head_actionbar.setOnClickListener(this);
 
     }
@@ -191,21 +186,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private FragmentManager mFragManager;
     private TimeFrag mTimeFrag;
-
-    public void enableClick() {
-        myPosition.setEnabled(true);
-        myDestination.setEnabled(true);
-        timeToGo.setEnabled(true);
-        route.setEnabled(true);
-    }
-
-    private void unEnableClick() {
-        myPosition.setEnabled(false);
-        myDestination.setEnabled(false);
-        timeToGo.setEnabled(false);
-        route.setEnabled(false);
-    }
-
+    private LayoutTransition transition;
     private RelativeLayout rl_main;
     private TextView timeOfReach, positon;//司机到达时间、在哪上车
     private LinearLayout textInCenter;//屏幕中间布局
@@ -225,8 +206,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         initClient();
         initOrder();
 
-        mFragManager = getFragmentManager();
+        transition = new LayoutTransition();
 
+        mFragManager = getFragmentManager();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerly);
+        myDrawerLayoutListener = new MyDrawerLayoutListener(mDrawerLayout);
+        mDrawerLayout.addDrawerListener(myDrawerLayoutListener);
+        menuFrag = new MenuFrag();
+        mFragManager.beginTransaction().add(R.id.left_menu, menuFrag, "menuFrag").addToBackStack(null).commit();
         //布局顺滑
         rl_main = (RelativeLayout) findViewById(R.id.rl_main);
         rl_main.setLayoutTransition(new LayoutTransition());
@@ -239,10 +226,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         timeOfReach = (TextView) findViewById(R.id.timeOfReach);
         positon = (TextView) findViewById(R.id.positon);
 
-
         //地址选择模块
         route = (LinearLayout) findViewById(R.id.route);
         lyOfTime = (LinearLayout) findViewById(R.id.lyOfTime);
+        lyOfTime.setLayoutTransition(transition);//平滑移动
         myPosition = (TextView) findViewById(R.id.myPosition);
         myDestination = (TextView) findViewById(R.id.myDestination);
         timeToGo = (TextView) findViewById(R.id.timeToGo);
@@ -377,8 +364,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      * 初始化客户信息
      */
     private void initClient() {
-        client = new Client();
-//        client.setPhone(getIntent().getStringExtra("phone"));
+        client = httpUtils.getClientByGET(Str.URL_MEMBER);
     }
 
     private String orderedTime;
@@ -404,7 +390,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public boolean getLogining(){
         return isLogining;
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -413,14 +398,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 toLogin();
                 if (menuFrag == null) {
                     menuFrag = new MenuFrag();
-                    mFragManager.beginTransaction().add(R.id.rl_menuFrag, menuFrag, "menuFrag").addToBackStack(null).show(menuFrag).commit();
+                    mFragManager.beginTransaction().add(R.id.left_menu, menuFrag, "menuFrag").addToBackStack(null).show(menuFrag).commit();
                 } else {
                     //退回栈后fragment重新添加
-                    mFragManager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.rl_menuFrag, menuFrag, "menuFrag").addToBackStack(null).show(menuFrag).commit();
+                    mFragManager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.left_menu, menuFrag, "menuFrag").addToBackStack(null).show(menuFrag).commit();
                 }
-                isForeground = false;
-                actionBar.hide();
-                unEnableClick();//本层按钮不可用，免误操作
+                mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
             case R.id.myLocation:
                 //定位到我的位置
@@ -429,8 +412,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.showTime:
                 lyOfTime.setVisibility(View.VISIBLE);
-
-//                lyOfTime.setAnimation(AnimationUtils.loadAnimation(this, R.anim.item_time_show));
                 break;
             case R.id.hideTime:
                 lyOfTime.setVisibility(View.GONE);
@@ -462,8 +443,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 tv_buPinChe.setTextColor(Color.BLACK);
                 orderedMode = "拼车";
                 //测试
-//                Alipay alipay = new Alipay(this);
-//                alipay.payV2();
+
+                Alipay alipay = new Alipay(this);
+                alipay.payV2();
                 break;
             case R.id.tv_buPinChe:
                 tv_pinChe.setTextColor(Color.BLACK);
@@ -626,7 +608,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mLocationClient = null;
     }
 
-    public static boolean isForeground = true;
+//    public static boolean isForeground = true;
 
     @Override
     protected void onStart() {
@@ -674,7 +656,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onPause() {
         super.onPause();
         mMapView.onPause();
-        isForeground = false;
+//        isForeground = false;
     }
 
     @Override
@@ -698,7 +680,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (isForeground) {
+//            if (isForeground) {
                 //处于可见状态
                 if (isTwice) {
                     isTwice = !isTwice;
@@ -718,20 +700,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         public void run() {
                             isTwice = false;
                         }
-                    }, 3000);
+                    }, 5000);
                     return false;
                 }
-            } else {
-                if (!actionBar.isShowing()) {
-                    //从fragment退回，显示actionbar
-                    actionBar.show();
-                }
-                if (!myPosition.isEnabled()) {
-                    enableClick();
-                }
-                isForeground = !isForeground;
-                return super.onKeyDown(keyCode, event);
-            }
         }
         return super.onKeyDown(keyCode, event);
     }

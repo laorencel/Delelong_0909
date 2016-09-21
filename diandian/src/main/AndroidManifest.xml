@@ -21,19 +21,17 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_diandian"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="f888742515364f61a84e195df5942a44" />
-        <activity android:name=".MainActivity">
-        </activity>
-        <activity android:name=".ChoosePosition"></activity>
-        <activity android:name=".LoginActivity">
+        <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
+        <service android:name="com.amap.api.location.APSService" ></service>
 
-        </activity>
+        <!--activity-->
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,9 +39,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".menuActivity.SettingActivity">
-
-        </activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".ChoosePosition"></activity>
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".menuActivity.SettingActivity"> </activity>
         <activity android:name=".menuActivity.MenuInfoActivity"></activity>
         <activity android:name=".menuActivity.MenuModifyInfoActivity"></activity>
         <activity android:name=".menuActivity.MallActivity"></activity>
@@ -54,11 +53,10 @@
         <activity android:name=".menuActivity.PaymentActivity"></activity>
         <activity android:name=".menuActivity.InvoiceActivity"></activity>
         <activity android:name=".menuActivity.InvoiceInfoActivity"></activity>
-        <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
-        <service android:name="com.amap.api.location.APSService" ></service>
 
 
-        <!---->
+
+        <!--JPush-->
         <!-- Required SDK 核心功能-->
         <!-- option since 2.0.5 可配置PushService，DaemonService,PushReceiver,AlarmReceiver的android:process参数 将JPush相关组件设置为一个独立进程 -->
         <!-- 如：android:process=":remote" -->
@@ -173,11 +171,12 @@
             android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
     </application>
+
+    <!--JPush-->
     <!-- Required -->
     <permission
         android:name="com.delelong.diandian.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
-
     <!-- Required -->
     <uses-permission android:name="com.delelong.diandian.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
@@ -198,7 +197,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
 
